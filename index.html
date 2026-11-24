@@ -3,171 +3,101 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#eef2f5">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Study Compass">
-<title>Study Compass</title>
+<meta name="theme-color" content="#eef2f7">
 <link rel="manifest" href="manifest.webmanifest">
+<title>Study Compass</title>
 <style>
-:root{--bg:#eef2f5;--paper:#fff;--ink:#243447;--muted:#788797;--line:#e4eaf0;--blue:#58738f;--blue2:#eaf0f5;--green:#668779;--sand:#f4f0e9;--shadow:0 8px 26px rgba(37,55,73,.06)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-.app{max-width:1060px;margin:auto;padding:24px 20px 100px}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.brand{display:flex;align-items:center;gap:11px}.mark{width:39px;height:39px;border-radius:13px;background:#dce6ee;display:grid;place-items:center;color:#4e6a86;font-size:20px}
-h1{font-size:19px;letter-spacing:.02em;margin:0;font-weight:750}.subbrand{font-size:11px;color:var(--muted);letter-spacing:.13em;margin-top:2px}
-.date{font-size:13px;color:var(--muted);text-align:right}
-.greeting{margin:12px 0 20px}.eyebrow{font-size:11px;letter-spacing:.12em;color:var(--blue);font-weight:700}.greeting h2{font-size:27px;line-height:1.25;margin:7px 0 6px;letter-spacing:-.04em}.greeting p{color:var(--muted);font-size:13px;margin:0}
-.grid{display:grid;grid-template-columns:1.35fr .9fr;gap:15px}.stack{display:grid;gap:15px}
-.card{background:var(--paper);border:1px solid rgba(220,228,235,.8);border-radius:19px;padding:19px;box-shadow:var(--shadow)}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.card h3{font-size:14px;margin:0;font-weight:750}.hint{font-size:11px;color:var(--muted)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f6f8fa;border-radius:14px;padding:13px}.stat label{font-size:11px;color:var(--muted)}.stat strong{display:block;font-size:23px;margin-top:5px;letter-spacing:-.04em}.stat small{font-size:10px;color:var(--muted)}
-.progress{height:7px;border-radius:20px;background:#edf1f4;overflow:hidden}.progress span{height:100%;display:block;background:var(--blue);border-radius:20px;width:0;transition:width .2s}
-.goal-row{display:flex;justify-content:space-between;align-items:center;margin:14px 0 7px;font-size:12px}.goal-row strong{font-size:12px}
-.direction{background:#f3f6f8;border-radius:15px;padding:15px}.direction .tag{font-size:10px;color:var(--green);font-weight:750;letter-spacing:.1em}.direction h4{margin:7px 0 5px;font-size:15px}.direction p{font-size:12px;color:#687989;margin:0;line-height:1.6}
-.tasks{display:grid;gap:9px}.task{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;font-size:12px}.task input{accent-color:var(--blue);width:16px;height:16px}.task.done span{text-decoration:line-through;color:#9aa6b1}.task .subject{margin-left:auto;color:var(--muted);font-size:10px}
-.btn{border:0;border-radius:11px;padding:10px 13px;background:var(--blue);color:#fff;font-size:12px;font-weight:650}.btn.secondary{background:var(--blue2);color:var(--blue)}.btn.ghost{background:transparent;color:var(--blue);padding:7px 4px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-.field{display:grid;gap:5px;margin-bottom:11px}.field label{font-size:11px;color:var(--muted)}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fbfcfd;border-radius:10px;padding:10px;color:var(--ink);font-size:13px;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#91a6ba}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.subject-list{display:grid;gap:8px}.subject-row{display:grid;grid-template-columns:75px 1fr 35px;gap:9px;align-items:center;font-size:11px}.bar{height:8px;background:#edf1f4;border-radius:20px;overflow:hidden}.bar span{display:block;height:100%;background:#8298ad;border-radius:20px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px}.tab{border:1px solid var(--line);background:#fff;color:var(--muted);padding:8px 12px;border-radius:30px;font-size:11px}.tab.active{background:#e4ebf1;color:#405d79;border-color:#e4ebf1;font-weight:700}
-.panel{display:none}.panel.active{display:block}.empty{font-size:12px;color:var(--muted);padding:14px 0;text-align:center}
-.chart{height:125px;display:flex;align-items:end;gap:8px;padding:8px 2px 0}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:end}.chart-bar{width:100%;max-width:35px;background:#9aafc1;border-radius:7px 7px 2px 2px;min-height:3px}.chart-col small{font-size:9px;color:var(--muted)}
-.note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:12px}
-.modal{position:fixed;inset:0;background:rgba(24,39,54,.35);display:none;align-items:end;justify-content:center;padding:14px;z-index:10}.modal.show{display:flex}.sheet{background:#fff;border-radius:20px;padding:20px;width:min(520px,100%);max-height:88vh;overflow:auto;box-shadow:0 20px 60px #1b2a3b30}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.sheet-head h3{margin:0;font-size:16px}.close{border:0;background:#f1f4f6;border-radius:50%;width:30px;height:30px;color:#667}
-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:5}
-nav button{border:0;background:transparent;color:#8794a1;font-size:10px;padding:7px 17px;border-radius:12px}nav button.active{background:#eaf0f5;color:#4e6a86;font-weight:700}nav span{display:block;font-size:17px;margin-bottom:2px}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#26394d;color:#fff;padding:10px 15px;border-radius:30px;font-size:11px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}.toast.show{opacity:1}
-@media(max-width:700px){.app{padding:18px 14px 100px}.grid{grid-template-columns:1fr}.greeting h2{font-size:24px}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:20px}.card{padding:16px}}
+:root{--bg:#eef2f7;--card:#fff;--ink:#243247;--muted:#78869a;--line:#e5eaf1;--blue:#597da8;--blue2:#e8f0fa;--green:#648b7b;--red:#b76d6d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+header{padding:28px 20px 16px;max-width:760px;margin:auto}h1{font-size:26px;margin:0 0 5px;letter-spacing:-.8px}.sub{color:var(--muted);font-size:13px}
+main{max-width:760px;margin:auto;padding:0 16px 48px}.tabs{display:flex;gap:7px;overflow:auto;padding:8px 0 14px}.tab{border:0;border-radius:12px;padding:11px 14px;background:#e1e7ef;color:#526176;font-weight:650;white-space:nowrap}.tab.active{background:var(--blue);color:white}
+.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin:0 0 13px;box-shadow:0 3px 12px #31445b08}
+h2{font-size:16px;margin:0 0 13px}h3{font-size:14px;margin:0 0 8px}.muted{color:var(--muted);font-size:12px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f6f8fb;border-radius:14px;padding:13px}.stat strong{display:block;font-size:23px;margin-top:5px}
+label{display:block;font-size:12px;color:#64748b;margin:11px 0 6px}input,select,textarea{width:100%;border:1px solid #dfe5ed;border-radius:11px;padding:12px;background:#fbfcfe;color:var(--ink);font:inherit;font-size:14px}textarea{min-height:80px;resize:vertical}
+button.primary{border:0;background:var(--blue);color:white;border-radius:11px;padding:12px 15px;font-weight:700;margin-top:12px;width:100%}button.secondary{border:0;background:var(--blue2);color:#496b94;border-radius:10px;padding:8px 11px;font-weight:650}button.danger{border:0;background:#f8eeee;color:var(--red);border-radius:9px;padding:7px 9px}
+.row{display:flex;gap:9px;align-items:center}.row>*{flex:1}.item{display:flex;align-items:center;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item .grow{flex:1;min-width:0}.item small{display:block;color:var(--muted);margin-top:3px}.check{width:19px;height:19px;accent-color:var(--blue)}.bar{height:8px;background:#edf1f6;border-radius:9px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:#7798bd;border-radius:9px}
+.empty{color:var(--muted);font-size:13px;padding:12px 0}.subjectline{display:flex;justify-content:space-between;font-size:13px;margin:10px 0 4px}
+footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 </style>
 </head>
 <body>
-<div class="app">
-<header>
- <div class="brand"><div class="mark">⌖</div><div><h1>STUDY COMPASS</h1><div class="subbrand">FIND YOUR DIRECTION</div></div></div>
- <div class="date" id="todayDate"></div>
-</header>
-<section class="greeting">
- <div class="eyebrow">YOUR DAILY CHECK-IN</div>
- <h2>오늘의 방향을<br>차분히 정해볼까요?</h2>
- <p>완벽한 하루보다, 어제보다 조금 나아지는 하루.</p>
-</section>
-<div class="tabs" role="tablist">
- <button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="analysis">학습 분석</button><button class="tab" data-tab="review">주간 회고</button>
-</div>
+<header><h1>Study Compass</h1><div class="sub" id="todayLabel">오늘의 학습 나침반</div></header>
+<main>
+<nav class="tabs">
+<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="settings">목표 설정</button>
+</nav>
 <section class="panel active" id="home">
- <div class="grid">
-  <div class="stack">
-   <article class="card">
-    <div class="card-head"><h3>오늘의 학습 현황</h3><span class="hint" id="todayLabel">TODAY</span></div>
-    <div class="stats">
-     <div class="stat"><label>공부 시간</label><strong id="hoursStat">0<span style="font-size:13px">분</span></strong><small>오늘 누적</small></div>
-     <div class="stat"><label>목표 달성</label><strong id="goalStat">0%</strong><small>할 일 기준</small></div>
-     <div class="stat"><label>학습 과목</label><strong id="subjectStat">0</strong><small>기록한 과목</small></div>
-    </div>
-    <div class="goal-row"><span>오늘 공부 목표</span><strong id="goalText">0 / 180분</strong></div><div class="progress"><span id="goalBar"></span></div>
-    <div class="actions"><button class="btn" id="addStudy">+ 공부 기록</button><button class="btn secondary" id="setGoal">목표 설정</button></div>
-   </article>
-   <article class="card">
-    <div class="card-head"><h3>오늘의 할 일</h3><button class="btn ghost" id="addTask">+ 추가</button></div>
-    <div class="tasks" id="taskList"></div>
-   </article>
-  </div>
-  <div class="stack">
-   <article class="card">
-    <div class="card-head"><h3>오늘의 공부 방향</h3><span class="hint">COMPASS</span></div>
-    <div class="direction"><div class="tag">TODAY'S SUGGESTION</div><h4 id="directionTitle">기록을 쌓아 방향을 찾아봐요.</h4><p id="directionText">공부 시간과 과목별 이해도를 기록하면, 이곳에서 오늘의 우선순위와 다음 주 학습 제안을 확인할 수 있어요.</p></div>
-    <p class="note">제안은 입력한 기록을 바탕으로 한 간단한 규칙 기반 분석이에요. 정답이 아니라 계획을 세우는 참고 자료로 활용해 주세요.</p>
-   </article>
-   <article class="card">
-    <div class="card-head"><h3>과목별 공부 시간</h3><span class="hint">TODAY</span></div>
-    <div class="subject-list" id="subjectBars"><div class="empty">아직 공부 기록이 없어요.</div></div>
-   </article>
-  </div>
- </div>
+<div class="card"><h2>오늘의 공부 현황</h2><div class="stats"><div class="stat"><span class="muted">오늘 공부 시간</span><strong id="todayTotal">0분</strong></div><div class="stat"><span class="muted">하루 목표</span><strong id="goalText">300분</strong></div></div><div class="bar"><span id="goalBar" style="width:0%"></span></div><div class="muted" id="goalProgress" style="margin-top:7px">목표의 0% 달성</div></div>
+<div class="card"><h2>오늘의 공부 방향</h2><div class="row"><input id="directionInput" placeholder="예: 미적분 개념 복습하기"><button class="secondary" id="addDirection" style="flex:0 0 auto">추가</button></div><div id="directionList"></div></div>
+<div class="card"><h2>과목별 공부 시간</h2><div id="subjectSummary" class="empty">공부 기록을 추가하면 과목별 시간이 여기에 표시돼.</div></div>
+<div class="card"><h2>빠른 실행</h2><button class="primary" data-goto="record">+ 공부 기록 추가하기</button></div>
+</section>
+<section class="panel" id="record">
+<div class="card"><h2>공부 기록 추가</h2>
+<label for="recordDate">날짜</label><input type="date" id="recordDate">
+<label for="subject">과목</label><select id="subject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select>
+<label for="minutes">공부 시간 (분)</label><input type="number" id="minutes" min="1" step="1" placeholder="예: 50">
+<label for="recordNote">학습 내용 (선택)</label><textarea id="recordNote" placeholder="오늘 공부한 내용이나 기억할 점"></textarea>
+<button class="primary" id="saveRecord">기록 저장하기</button><div class="muted" id="recordMessage" aria-live="polite"></div>
+</div><div class="card"><h2>저장된 기록</h2><div id="recordList"></div></div>
 </section>
 <section class="panel" id="analysis">
- <div class="grid">
-  <article class="card">
-   <div class="card-head"><h3>최근 7일 공부 시간</h3><span class="hint">MINUTES</span></div>
-   <div class="chart" id="weekChart"></div>
-   <p class="note">공부 기록을 남기면 날짜별 누적 시간이 표시돼요.</p>
-  </article>
-  <article class="card">
-   <div class="card-head"><h3>과목별 이해도</h3><span class="hint">1–5</span></div>
-   <div id="understandingList" class="subject-list"><div class="empty">이해도를 입력하면 분석할 수 있어요.</div></div>
-  </article>
- </div>
- <article class="card" style="margin-top:15px">
-  <div class="card-head"><h3>성적 변화 기록</h3><button class="btn ghost" id="addScore">+ 성적 추가</button></div>
-  <div id="scoreList" class="subject-list"><div class="empty">시험 점수를 기록해 변화 추이를 살펴보세요.</div></div>
-  <p class="note">시험 종류와 점수를 직접 기록합니다. 시험 간 난이도가 다를 수 있으므로 점수만으로 실력을 단정하지 않아요.</p>
- </article>
+<div class="card"><h2>일간 분석</h2><label for="analysisDate">분석할 날짜</label><input type="date" id="analysisDate"><div class="stats" style="margin-top:12px"><div class="stat"><span class="muted">총 공부 시간</span><strong id="analysisTotal">0분</strong></div><div class="stat"><span class="muted">기록 횟수</span><strong id="analysisCount">0회</strong></div></div></div>
+<div class="card"><h2>과목별 시간 분석</h2><div id="analysisSubjects" class="empty">해당 날짜의 기록이 없어.</div></div>
+<div class="card"><h2>학습 기록 내용</h2><div id="analysisNotes" class="empty">아직 기록이 없어.</div></div>
 </section>
 <section class="panel" id="review">
- <article class="card">
-  <div class="card-head"><h3>이번 주 학습 리포트</h3><span class="hint">WEEKLY REVIEW</span></div>
-  <div class="stats">
-   <div class="stat"><label>총 공부 시간</label><strong id="weekMinutes">0분</strong><small>최근 7일</small></div>
-   <div class="stat"><label>완료한 할 일</label><strong id="weekTasks">0</strong><small>오늘 저장된 할 일 기준</small></div>
-   <div class="stat"><label>성적 기록</label><strong id="scoreCount">0</strong><small>누적 입력</small></div>
-  </div>
-  <div style="margin-top:18px" class="field"><label for="reflection">이번 주 돌아보기</label><textarea id="reflection" rows="4" placeholder="잘된 점, 어려웠던 점, 다음 주에 바꾸고 싶은 점을 적어보세요."></textarea></div>
-  <button class="btn" id="saveReflection">회고 저장</button>
- </article>
-</section>
+<div class="card"><h2>오늘의 회고</h2><label for="reviewDate">회고 날짜</label><input type="date" id="reviewDate">
+<label for="good">잘한 점</label><textarea id="good" placeholder="오늘 잘 해낸 일은?"></textarea>
+<label for="improve">아쉬운 점</label><textarea id="improve" placeholder="다음에는 어떻게 보완할까?"></textarea>
+<label for="tomorrow">내일 개선할 점</label><textarea id="tomorrow" placeholder="내일 가장 먼저 실천할 일은?"></textarea>
+<button class="primary" id="saveReview">회고 저장하기</button><div class="muted" id="reviewMessage" aria-live="polite"></div>
 </div>
-<nav><button class="active" data-nav="home"><span>⌂</span>오늘</button><button data-nav="analysis"><span>▥</span>분석</button><button data-nav="review"><span>✎</span>회고</button></nav>
-<div class="modal" id="modal"><div class="sheet"><div class="sheet-head"><h3 id="modalTitle">기록 추가</h3><button class="close" id="closeModal">×</button></div><div id="modalBody"></div></div></div>
-<div class="toast" id="toast"></div>
+</section>
+<section class="panel" id="settings">
+<div class="card"><h2>하루 공부 목표</h2><label for="goalInput">목표 시간 (분)</label><input type="number" id="goalInput" min="1" step="10" placeholder="300"><button class="primary" id="saveGoal">목표 저장하기</button><div class="muted" id="goalMessage" aria-live="polite"></div></div>
+<div class="card"><h2>데이터 안내</h2><p class="muted">기록은 현재 사용 중인 브라우저에 저장돼. 다른 기기와 자동으로 동기화되지는 않으니 브라우저 데이터를 삭제하기 전에 백업해 줘.</p><button class="secondary" id="exportData">기록 백업 파일 내보내기</button></div>
+</section>
+<footer>작은 기록이 모여 나만의 학습 방향이 돼.</footer>
+</main>
 <script>
-const $=s=>document.querySelector(s);
-const todayKey=()=>new Date().toISOString().slice(0,10);
-const dateLabel=new Intl.DateTimeFormat('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date());
-$('#todayDate').textContent=dateLabel;
-const defaults={goal:180,studies:[],tasks:[{id:1,text:'오늘 공부할 과목과 범위 정하기',subject:'계획',done:false}],scores:[],understanding:{},reflection:''};
-let data;
-try{data={...defaults,...JSON.parse(localStorage.getItem('studyCompassData')||'{}')};}catch(e){data={...defaults};}
-function save(){localStorage.setItem('studyCompassData',JSON.stringify(data));render();}
-function minsToday(){return data.studies.filter(x=>x.date===todayKey()).reduce((a,x)=>a+Number(x.minutes),0)}
-function weekDays(){let a=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);a.push(d.toISOString().slice(0,10));}return a}
-function showToast(t){let el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
-function render(){
- const today=minsToday(),done=data.tasks.filter(t=>t.done).length,percent=data.tasks.length?Math.round(done/data.tasks.length*100):0;
- $('#hoursStat').innerHTML=today>=60?`${Math.floor(today/60)}<span style="font-size:13px">시간</span> ${today%60}<span style="font-size:13px">분</span>`:`${today}<span style="font-size:13px">분</span>`;
- $('#goalStat').textContent=percent+'%';$('#subjectStat').textContent=new Set(data.studies.filter(x=>x.date===todayKey()).map(x=>x.subject)).size;
- $('#goalText').textContent=`${today} / ${data.goal}분`;$('#goalBar').style.width=Math.min(100,today/data.goal*100)+'%';
- $('#taskList').innerHTML=data.tasks.length?data.tasks.map(t=>`<label class="task ${t.done?'done':''}"><input type="checkbox" data-task="${t.id}" ${t.done?'checked':''}><span>${esc(t.text)}</span><small class="subject">${esc(t.subject||'')}</small></label>`).join(''):'<div class="empty">할 일을 추가해 보세요.</div>';
- $('#taskList').querySelectorAll('input').forEach(el=>el.addEventListener('change',()=>{let t=data.tasks.find(x=>x.id==el.dataset.task);if(t)t.done=el.checked;save()}));
- let subs={};data.studies.filter(x=>x.date===todayKey()).forEach(x=>subs[x.subject]=(subs[x.subject]||0)+Number(x.minutes));
- let entries=Object.entries(subs).sort((a,b)=>b[1]-a[1]);$('#subjectBars').innerHTML=entries.length?entries.map(([s,m])=>`<div class="subject-row"><span>${esc(s)}</span><div class="bar"><span style="width:${Math.max(3,m/Math.max(...entries.map(x=>x[1]))*100)}%"></span></div><b>${m}분</b></div>`).join(''):'<div class="empty">아직 공부 기록이 없어요.</div>';
- const weak=Object.entries(data.understanding).filter(([s,v])=>Number(v)<=2).sort((a,b)=>a[1]-b[1]);
- if(weak.length){$('#directionTitle').textContent=`${weak[0][0]}을(를) 먼저 점검해 보세요.`;$('#directionText').textContent=`현재 입력한 이해도가 ${weak[0][1]}/5예요. 개념을 짧게 복습한 뒤, 쉬운 문제로 이해 여부를 확인해 보세요. 한 번에 많은 양을 하기보다 작은 단위로 시작하는 것을 추천해요.`}
- else if(today<data.goal){$('#directionTitle').textContent='오늘 목표까지 조금씩 이어가요.';$('#directionText').textContent=`오늘 ${today}분을 기록했어요. 목표까지 ${Math.max(0,data.goal-today)}분 남았어요. 남은 시간과 컨디션을 고려해 부담 없는 다음 과제를 골라보세요.`}
- else{$('#directionTitle').textContent='오늘 목표를 달성했어요.';$('#directionText').textContent='오늘 기록을 간단히 돌아보고, 내일 가장 먼저 시작할 일을 한 가지 정해보세요.'}
- let days=weekDays(),vals=days.map(d=>data.studies.filter(x=>x.date===d).reduce((a,x)=>a+Number(x.minutes),0)),max=Math.max(60,...vals);
- $('#weekChart').innerHTML=vals.map((v,i)=>`<div class="chart-col"><div class="chart-bar" style="height:${Math.max(3,v/max*88)}px"></div><small>${new Date(days[i]+'T12:00:00').toLocaleDateString('ko-KR',{weekday:'short'})}</small></div>`).join('');
- let und=Object.entries(data.understanding);$('#understandingList').innerHTML=und.length?und.map(([s,v])=>`<div class="subject-row"><span>${esc(s)}</span><div class="bar"><span style="width:${v*20}%"></span></div><b>${v}/5</b></div>`).join(''):'<div class="empty">공부 기록을 추가할 때 이해도를 입력해 보세요.</div>';
- $('#scoreList').innerHTML=data.scores.length?data.scores.slice().reverse().map(x=>`<div class="subject-row" style="grid-template-columns:1fr auto auto"><span>${esc(x.subject)} · ${esc(x.exam)}</span><b>${x.score}점</b><small>${esc(x.date)}</small></div>`).join(''):'<div class="empty">시험 점수를 기록해 변화 추이를 살펴보세요.</div>';
- $('#weekMinutes').textContent=vals.reduce((a,b)=>a+b,0)+'분';$('#weekTasks').textContent=done;$('#scoreCount').textContent=data.scores.length;
- $('#reflection').value=data.reflection||'';
-}
+const KEY='studyCompassV2';
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+let state={goal:300,records:[],directions:{},reviews:{}};
+try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old)state={...state,...old}}catch(e){}
+const $=id=>document.getElementById(id);
+const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+const mins=n=>`${Math.floor(n/60)}시간 ${n%60}분`.replace(/^0시간 /,'');
+function recordsOn(date){return state.records.filter(r=>r.date===date)}
+function totalOn(date){return recordsOn(date).reduce((s,r)=>s+r.minutes,0)}
+function subjectsOn(date){const m={};recordsOn(date).forEach(r=>m[r.subject]=(m[r.subject]||0)+r.minutes);return m}
+function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview()}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.goto)));
+function renderHome(){const d=today(),t=totalOn(d),pct=Math.min(100,Math.round(t/state.goal*100));$('todayTotal').textContent=mins(t);$('goalText').textContent=mins(state.goal);$('goalBar').style.width=pct+'%';$('goalProgress').textContent=`목표의 ${pct}% 달성`;
+const subs=subjectsOn(d);$('subjectSummary').innerHTML=Object.keys(subs).length?Object.entries(subs).map(([s,n])=>`<div class="subjectline"><span>${esc(s)}</span><b>${mins(n)}</b></div><div class="bar"><span style="width:${Math.min(100,n/Math.max(t,1)*100)}%"></span></div>`).join(''):'공부 기록을 추가하면 과목별 시간이 여기에 표시돼.';
+renderDirections()}
+function renderDirections(){const arr=state.directions[today()]||[];$('directionList').innerHTML=arr.length?arr.map((x,i)=>`<div class="item"><input class="check" type="checkbox" data-dir="${i}" ${x.done?'checked':''}><div class="grow" style="${x.done?'text-decoration:line-through;opacity:.55':''}">${esc(x.text)}</div><button class="danger" data-del-dir="${i}">삭제</button></div>`).join(''):'<div class="empty">오늘의 공부 방향을 직접 추가해 봐.</div>'}
+$('addDirection').onclick=()=>{const v=$('directionInput').value.trim();if(!v)return;state.directions[today()]??=[];state.directions[today()].push({text:v,done:false});$('directionInput').value='';save();renderDirections()};
+$('directionList').addEventListener('change',e=>{if(e.target.dataset.dir!==undefined){const a=state.directions[today()];a[+e.target.dataset.dir].done=e.target.checked;save();renderDirections()}});
+$('directionList').addEventListener('click',e=>{if(e.target.dataset.delDir!==undefined){state.directions[today()].splice(+e.target.dataset.delDir,1);save();renderDirections()}});
+$('recordDate').value=today();$('analysisDate').value=today();$('reviewDate').value=today();
+$('saveRecord').onclick=()=>{const date=$('recordDate').value||today(),subject=$('subject').value,minutes=Number($('minutes').value);if(!Number.isInteger(minutes)||minutes<1){$('recordMessage').textContent='공부 시간을 1분 이상의 숫자로 입력해 줘.';return}
+state.records.push({id:Date.now()+Math.random(),date,subject,minutes,note:$('recordNote').value.trim()});save();$('minutes').value='';$('recordNote').value='';$('recordMessage').textContent='저장했어! 과목별 공부 시간에도 자동 반영됐어.';renderAll()};
+function renderRecords(){const arr=[...state.records].sort((a,b)=>b.date.localeCompare(a.date));$('recordList').innerHTML=arr.length?arr.map(r=>`<div class="item"><div class="grow"><b>${esc(r.subject)} · ${mins(r.minutes)}</b><small>${r.date}${r.note?' · '+esc(r.note):''}</small></div><button class="danger" data-del-record="${r.id}">삭제</button></div>`).join(''):'<div class="empty">아직 저장된 공부 기록이 없어.</div>'}
+$('recordList').addEventListener('click',e=>{if(e.target.dataset.delRecord){state.records=state.records.filter(r=>String(r.id)!==e.target.dataset.delRecord);save();renderAll()}});
+function renderAnalysis(){const d=$('analysisDate').value||today(),arr=recordsOn(d),t=totalOn(d),subs=subjectsOn(d);$('analysisTotal').textContent=mins(t);$('analysisCount').textContent=arr.length+'회';$('analysisSubjects').innerHTML=Object.keys(subs).length?Object.entries(subs).map(([s,n])=>`<div class="subjectline"><span>${esc(s)}</span><b>${mins(n)}</b></div><div class="bar"><span style="width:${Math.min(100,n/Math.max(t,1)*100)}%"></span></div>`).join(''):'해당 날짜의 기록이 없어.';$('analysisNotes').innerHTML=arr.length?arr.map(r=>`<div class="item"><div class="grow"><b>${esc(r.subject)} · ${mins(r.minutes)}</b><small>${esc(r.note||'학습 내용 메모 없음')}</small></div></div>`).join(''):'아직 기록이 없어.'}
+$('analysisDate').onchange=renderAnalysis;
+function loadReview(){const r=state.reviews[$('reviewDate').value]||{};$('good').value=r.good||'';$('improve').value=r.improve||'';$('tomorrow').value=r.tomorrow||''}
+$('reviewDate').onchange=loadReview;
+$('saveReview').onclick=()=>{state.reviews[$('reviewDate').value]={good:$('good').value,improve:$('improve').value,tomorrow:$('tomorrow').value};save();$('reviewMessage').textContent='회고를 저장했어!'};
+$('saveGoal').onclick=()=>{const n=Number($('goalInput').value);if(!Number.isInteger(n)||n<1){$('goalMessage').textContent='1분 이상의 숫자로 입력해 줘.';return}state.goal=n;save();$('goalMessage').textContent='하루 목표를 저장했어!';renderHome()};
+$('goalInput').value=state.goal;
+$('exportData').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='study-compass-backup.json';a.click();URL.revokeObjectURL(url)};
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function modal(title,body){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=body;$('#modal').classList.add('show')}
-function close(){ $('#modal').classList.remove('show')}
-$('#closeModal').onclick=close;$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')close()});
-$('#addStudy').onclick=()=>modal('공부 기록 추가',`<form id="studyForm"><div class="formgrid"><div class="field"><label>과목</label><input name="subject" placeholder="예: 수학" required></div><div class="field"><label>공부 시간 (분)</label><input name="minutes" type="number" min="1" max="1440" placeholder="50" required></div></div><div class="field"><label>이해도 (1: 어려움 · 5: 충분히 이해)</label><select name="level"><option value="">선택 안 함</option><option value="1">1 · 많이 어려움</option><option value="2">2 · 어려움</option><option value="3">3 · 보통</option><option value="4">4 · 잘 이해함</option><option value="5">5 · 충분히 이해함</option></select></div><div class="field"><label>메모 (선택)</label><input name="memo" placeholder="예: 함수의 극한 개념 복습"></div><button class="btn" style="width:100%">기록 저장</button></form>`);
- $('#studyForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),s=f.get('subject').trim(),level=f.get('level');data.studies.push({date:todayKey(),subject:s,minutes:Number(f.get('minutes')),memo:f.get('memo')});if(level)data.understanding[s]=Number(level);close();save();showToast('공부 기록을 저장했어요.');};
-$('#setGoal').onclick=()=>modal('하루 공부 목표',`<form id="goalForm"><div class="field"><label>목표 시간 (분)</label><input name="goal" type="number" min="10" max="1440" value="${data.goal}" required></div><button class="btn" style="width:100%">목표 저장</button></form>`);$('#goalForm').onsubmit=e=>{e.preventDefault();data.goal=Number(new FormData(e.target).get('goal'));close();save();showToast('목표를 변경했어요.');};
-$('#addTask').onclick=()=>modal('할 일 추가',`<form id="taskForm"><div class="field"><label>할 일</label><input name="text" placeholder="예: 영어 단어 30개 복습" required></div><div class="field"><label>과목</label><input name="subject" placeholder="예: 영어"></div><button class="btn" style="width:100%">추가하기</button></form>`);$('#taskForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target);data.tasks.push({id:Date.now(),text:f.get('text').trim(),subject:f.get('subject').trim(),done:false});close();save();};
-$('#addScore').onclick=()=>modal('성적 기록 추가',`<form id="scoreForm"><div class="field"><label>과목</label><input name="subject" placeholder="예: 수학" required></div><div class="field"><label>시험 이름</label><input name="exam" placeholder="예: 11월 모의고사" required></div><div class="formgrid"><div class="field"><label>점수</label><input name="score" type="number" min="0" max="100" required></div><div class="field"><label>시험 날짜</label><input name="date" type="date" value="${todayKey()}" required></div></div><button class="btn" style="width:100%">성적 저장</button></form>`);$('#scoreForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target);data.scores.push({subject:f.get('subject'),exam:f.get('exam'),score:Number(f.get('score')),date:f.get('date')});close();save();showToast('성적을 저장했어요.');};
-$('#saveReflection').onclick=()=>{data.reflection=$('#reflection').value;save();showToast('회고를 저장했어요.');};
-function switchTab(tab){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===tab));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.nav===tab));}
-document.querySelectorAll('[data-tab],[data-nav]').forEach(x=>x.addEventListener('click',()=>switchTab(x.dataset.tab||x.dataset.nav)));
-render();
+function renderAll(){renderHome();renderRecords();renderAnalysis()}
+$('todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+renderAll();
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
-</body>
-</html>
+</body></html>
