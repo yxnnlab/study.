@@ -1,1 +1,7 @@
-Study Compass v2\n\nGitHub Pages root에 index.html, manifest.webmanifest, sw.js를 업로드하세요.\n기록은 현재 브라우저의 localStorage에 저장됩니다.\n
+Study Compass v3 - 실시간 공부 타이머 추가
+
+GitHub Pages 저장소 루트에 index.html, manifest.webmanifest, sw.js를 업로드하고 기존 파일을 덮어쓴 뒤 Commit changes를 눌러 주세요.
+
+타이머는 시작 시각을 브라우저에 저장하므로 앱을 다른 화면으로 전환하거나 닫았다가 다시 열어도 경과 시간을 복구합니다. 정지 후 과목과 학습 내용을 선택해 기록을 저장하면 기존 공부 기록·일간 분석·과목별 시간에 반영됩니다.
+
+측정한 시간은 분 단위로 반올림되어 저장되며, 1분 미만도 1분으로 기록됩니다. 자정이 지나면 시작한 날짜에 기록됩니다. 데이터는 기존과 같이 해당 브라우저의 localStorage에 저장됩니다.
