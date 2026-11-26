@@ -22,10 +22,10 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 </style>
 </head>
 <body>
-<header><h1>Study Compass</h1><div class="sub" id="todayLabel">오늘의 학습 나침반</div></header>
+<header><h1>Study Compass</h1><div class="sub" id="todayLabel">오늘의 학습 나침반</div><div class="sub" id="syncBadge" style="margin-top:3px"></div></header>
 <main>
 <nav class="tabs">
-<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="grades">성적 관리</button><button class="tab" data-tab="mistakes">오답 분석</button><button class="tab" data-tab="weekly">주간 리포트</button><button class="tab" data-tab="archive">기록 보관함</button><button class="tab" data-tab="settings">목표 설정</button>
+<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="archive">기록 보관함</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="grades">성적 관리</button><button class="tab" data-tab="mistakes">오답 분석</button><button class="tab" data-tab="weekly">주간 리포트</button><button class="tab" data-tab="settings">목표 설정</button>
 </nav>
 <section class="panel active" id="home">
 <div class="card" id="timerCard"><h2>실시간 공부 타이머</h2><div class="timer-status" id="timerStatus">공부할 준비가 되면 시작 버튼을 눌러 줘.</div><div class="timer-clock" id="timerClock">00:00:00</div><div class="timer-actions"><button class="primary" id="timerStart" style="margin-top:0">▶ 공부 시작</button><button class="primary" id="timerStop" style="margin-top:0;background:#b76d6d" disabled>■ 정지</button></div><div id="timerSaveArea" hidden style="margin-top:15px"><div class="muted" id="timerPendingText"></div><label for="timerSubject">공부한 과목 선택</label><select id="timerSubject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select><label for="timerNote">학습 내용 (선택)</label><textarea id="timerNote" placeholder="무엇을 공부했는지 적어 줘"></textarea><button class="primary" id="timerSave">과목 선택 후 기록 저장</button><button class="secondary" id="timerDiscard" style="width:100%;margin-top:8px">기록 취소</button></div></div>
@@ -99,23 +99,29 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 </section>
 <section class="panel" id="settings">
 <div class="card"><h2>하루 공부 목표</h2><label for="goalInput">목표 시간 (분)</label><input type="number" id="goalInput" min="1" step="10" placeholder="300"><button class="primary" id="saveGoal">목표 저장하기</button><div class="muted" id="goalMessage" aria-live="polite"></div></div>
+<div class="card" id="syncCard"><h2>기기 간 동기화</h2><div class="muted" id="syncStatus"></div>
+<div id="syncAuth" hidden><label for="syncEmail">이메일</label><input type="email" id="syncEmail" autocomplete="email"><label for="syncPw">비밀번호 (6자 이상)</label><input type="password" id="syncPw" autocomplete="current-password">
+<div class="row"><button class="primary" id="syncSignIn">로그인</button><button class="primary" id="syncSignUp" style="background:#8ea7c4">회원가입</button></div><button class="secondary" id="syncGoogle" style="width:100%;margin-top:8px">Google 계정으로 계속하기</button></div>
+<div id="syncUser" hidden><div id="syncWho" style="margin:10px 0;font-weight:650"></div><button class="primary" id="syncNow" style="margin-top:0">지금 동기화</button><button class="secondary" id="syncOut" style="width:100%;margin-top:8px">로그아웃</button></div>
+<div class="muted" id="syncMsg" aria-live="polite" style="margin-top:8px"></div></div>
 <div class="card"><h2>데이터 안내</h2><p class="muted">기록은 현재 사용 중인 브라우저에 저장돼. 다른 기기와 자동으로 동기화되지는 않으니 브라우저 데이터를 삭제하기 전에 백업해 줘.</p><div class="muted" id="storageInfo" style="margin-bottom:10px"></div><button class="secondary" id="exportData">기록 백업 파일 내보내기</button> <button class="secondary" id="importBtn">백업 파일 불러오기</button><input type="file" id="importFile" accept="application/json,.json" hidden><div class="muted" id="importMessage" aria-live="polite" style="margin-top:8px"></div></div>
 </section>
-<footer>작은 기록이 모여 나만의 학습 방향이 돼.</footer>
+<footer>작은 기록이 모여 나만의 학습 방향이 돼.<br>Study Compass v6</footer>
 </main>
+<script src="sync-config.js"></script>
 <script>
 const KEY='studyCompassV2';
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-let state={firstUse:null,goal:300,records:[],directions:{},reviews:{},activeTimer:null,pendingSession:null,gradeProfiles:{},exams:[],mistakes:[]};
+let state={firstUse:null,del:{},mt:{},metaAt:0,goal:300,records:[],directions:{},reviews:{},activeTimer:null,pendingSession:null,gradeProfiles:{},exams:[],mistakes:[]};
 try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old)state={...state,...old,gradeProfiles:old.gradeProfiles||{},exams:old.exams||[],mistakes:old.mistakes||[]}}catch(e){}
 const $=id=>document.getElementById(id);
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('브라우저 저장 공간에 문제가 있어 기록을 저장하지 못했어. 설정에서 백업 파일을 내보내 줘.')}};
+const save=()=>{try{try{trackChanges()}catch(e){}localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('브라우저 저장 공간에 문제가 있어 기록을 저장하지 못했어. 설정에서 백업 파일을 내보내 줘.')}if(typeof scheduleSync==='function')scheduleSync()};
 const mins=n=>`${Math.floor(n/60)}시간 ${n%60}분`.replace(/^0시간 /,'');
 (function(){const ds=state.records.map(r=>r.date).sort();const first=ds[0];if(!state.firstUse||(first&&first<state.firstUse))state.firstUse=first||state.firstUse||today();try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}})();
 function recordsOn(date){return state.records.filter(r=>r.date===date)}
 function totalOn(date){return recordsOn(date).reduce((s,r)=>s+r.minutes,0)}
 function subjectsOn(date){const m={};recordsOn(date).forEach(r=>m[r.subject]=(m[r.subject]||0)+r.minutes);return m}
-function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview();if(name==='grades')renderGrades();if(name==='mistakes')renderMistakes();if(name==='weekly')renderWeekly();if(name==='archive')renderArchive()}
+function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview();if(name==='grades')renderGrades();if(name==='mistakes')renderMistakes();if(name==='weekly')renderWeekly();if(name==='archive')renderArchive();rollover();const at=document.querySelector('.tab.active');if(at&&at.scrollIntoView)at.scrollIntoView({inline:'center',block:'nearest'})}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.goto)));
 function renderHome(){const d=today(),t=totalOn(d),pct=Math.min(100,Math.round(t/state.goal*100));$('todayTotal').textContent=mins(t);$('goalText').textContent=mins(state.goal);$('goalBar').style.width=pct+'%';$('goalProgress').textContent=`목표의 ${pct}% 달성`;
@@ -144,12 +150,13 @@ let timerTicker=null;
 const pad=n=>String(n).padStart(2,'0');
 function formatClock(seconds){seconds=Math.max(0,Math.floor(seconds));return `${pad(Math.floor(seconds/3600))}:${pad(Math.floor(seconds%3600/60))}:${pad(seconds%60)}`}
 function elapsedSeconds(){return state.activeTimer?Math.max(0,Math.floor((Date.now()-state.activeTimer.startedAt)/1000)):0}
-function renderTimer(){const active=!!state.activeTimer,pending=state.pendingSession;$('timerClock').textContent=active?formatClock(elapsedSeconds()):pending?formatClock(pending.seconds):'00:00:00';$('timerStatus').textContent=active?'공부 중 · 앱을 나가도 시간 측정은 계속돼.':pending?'측정이 끝났어. 과목을 선택해 기록해 줘.':'공부할 준비가 되면 시작 버튼을 눌러 줘.';$('timerStart').disabled=active||!!pending;$('timerStop').disabled=!active;$('timerSaveArea').hidden=!pending;if(pending)$('timerPendingText').textContent=`측정 시간 ${formatClock(pending.seconds)} · 시작 날짜 ${pending.date}`;}
+function renderTimer(){const active=!!state.activeTimer,pending=state.pendingSession;$('timerClock').textContent=active?formatClock(elapsedSeconds()):pending?formatClock(pending.seconds):'00:00:00';$('timerStatus').textContent=active?'공부 중 · 앱을 나가도 시간 측정은 계속돼.':pending?'측정이 끝났어. 과목을 선택해 기록해 줘.':'공부할 준비가 되면 시작 버튼을 눌러 줘.';$('timerStart').disabled=active||!!pending;$('timerStop').disabled=!active;$('timerSaveArea').hidden=!pending;if(pending){const n=splitByDay(pending).length;$('timerPendingText').textContent=`측정 시간 ${formatClock(pending.seconds)} · 시작 날짜 ${pending.date}${n>1?` · 자정을 넘겨서 ${n}일로 나눠 저장돼`:''}`}}
 function startTimer(){if(state.activeTimer||state.pendingSession)return;state.activeTimer={startedAt:Date.now(),date:today()};save();renderTimer();if(timerTicker)clearInterval(timerTicker);timerTicker=setInterval(renderTimer,1000)}
-function stopTimer(){if(!state.activeTimer)return;const seconds=elapsedSeconds();state.pendingSession={seconds,date:state.activeTimer.date};state.activeTimer=null;save();if(timerTicker){clearInterval(timerTicker);timerTicker=null}renderTimer()}
+function stopTimer(){if(!state.activeTimer)return;const seconds=elapsedSeconds();const st0=state.activeTimer.startedAt;state.pendingSession={seconds,date:dkey(new Date(st0)),startedAt:st0,endedAt:st0+seconds*1000};state.activeTimer=null;save();if(timerTicker){clearInterval(timerTicker);timerTicker=null}renderTimer()}
 $('timerStart').onclick=startTimer;
 $('timerStop').onclick=stopTimer;
-$('timerSave').onclick=()=>{const p=state.pendingSession;if(!p)return;const minutes=Math.max(1,Math.round(p.seconds/60));state.records.push({id:Date.now()+Math.random(),date:p.date,subject:$('timerSubject').value,minutes,seconds:p.seconds,note:$('timerNote').value.trim(),source:'timer'});state.pendingSession=null;$('timerNote').value='';save();renderAll();renderTimer();$('timerStatus').textContent=`${mins(minutes)} 기록을 저장했어!`};
+function splitByDay(p){if(!p.startedAt)return[{date:p.date,seconds:p.seconds}];const segs=[],end=p.endedAt||p.startedAt+p.seconds*1000;let cur=p.startedAt;while(cur<end){const d=new Date(cur),next=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime(),to=Math.min(end,next);segs.push({date:dkey(d),seconds:Math.round((to-cur)/1000)});cur=to}if(!segs.length)return[{date:p.date,seconds:p.seconds}];const big=segs.filter(x=>x.seconds>=30);return segs.length>1&&big.length?big:segs}
+$('timerSave').onclick=()=>{const p=state.pendingSession;if(!p)return;const subject=$('timerSubject').value,note=$('timerNote').value.trim();let total=0;splitByDay(p).forEach(g=>{const minutes=Math.max(1,Math.round(g.seconds/60));total+=minutes;state.records.push({id:Date.now()+Math.random(),date:g.date,subject,minutes,seconds:g.seconds,note,source:'timer'})});state.pendingSession=null;$('timerNote').value='';save();renderAll();renderTimer();$('timerStatus').textContent=`${mins(total)} 기록을 저장했어!`};
 $('timerDiscard').onclick=()=>{if(!state.pendingSession)return;state.pendingSession=null;save();renderTimer()};
 if(state.activeTimer){timerTicker=setInterval(renderTimer,1000)}
 // 성적 관리 · 시험 성적 · 오답 유형 분석
@@ -207,13 +214,80 @@ $('monthList').innerHTML=months.length?months.map(k=>{const [yy,mm]=k.split('-')
 $('archive').addEventListener('click',e=>{const t=e.target.closest('[data-cal-nav],[data-day],[data-month]');if(!t)return;if(t.dataset.calNav){const d=new Date(calView.y,calView.m+Number(t.dataset.calNav),1);calView={y:d.getFullYear(),m:d.getMonth()}}else if(t.dataset.day){selDate=t.dataset.day}else if(t.dataset.month){const [yy,mm]=t.dataset.month.split('-').map(Number);calView={y:yy,m:mm-1};window.scrollTo({top:0,behavior:'smooth'})}renderArchive()});
 // 백업 불러오기(병합) · 저장소 영구 보존 요청
 $('importBtn').onclick=()=>$('importFile').click();
-$('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||!Array.isArray(d.records))throw 0;const merge=(a,b)=>{const ids=new Set(a.map(x=>String(x.id)));return a.concat((b||[]).filter(x=>!ids.has(String(x.id))))};const before=state.records.length;state.records=merge(state.records,d.records);state.exams=merge(state.exams,d.exams);state.mistakes=merge(state.mistakes,d.mistakes);state.reviews={...(d.reviews||{}),...state.reviews};state.directions={...(d.directions||{}),...state.directions};state.gradeProfiles={...(d.gradeProfiles||{}),...state.gradeProfiles};if(d.firstUse&&(!state.firstUse||d.firstUse<state.firstUse))state.firstUse=d.firstUse;save();renderAll();renderGrades();renderMistakes();$('importMessage').textContent=`불러오기 완료! 공부 기록 ${state.records.length-before}건을 추가했어.`}catch(err){$('importMessage').textContent='올바른 백업 파일이 아니야.'}$('importFile').value=''};rd.readAsText(f)};
+$('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||!Array.isArray(d.records))throw 0;const merge=(a,b)=>{const ids=new Set(a.map(x=>String(x.id)));return a.concat((b||[]).filter(x=>!ids.has(String(x.id))&&!state.del[String(x.id)]))};const before=state.records.length;state.records=merge(state.records,d.records);state.exams=merge(state.exams,d.exams);state.mistakes=merge(state.mistakes,d.mistakes);state.reviews={...(d.reviews||{}),...state.reviews};state.directions={...(d.directions||{}),...state.directions};state.gradeProfiles={...(d.gradeProfiles||{}),...state.gradeProfiles};if(d.firstUse&&(!state.firstUse||d.firstUse<state.firstUse))state.firstUse=d.firstUse;save();renderAll();renderGrades();renderMistakes();$('importMessage').textContent=`불러오기 완료! 공부 기록 ${state.records.length-before}건을 추가했어.`}catch(err){$('importMessage').textContent='올바른 백업 파일이 아니야.'}$('importFile').value=''};rd.readAsText(f)};
 if(navigator.storage&&navigator.storage.persist){navigator.storage.persist().then(ok=>{$('storageInfo').textContent=ok?'✔ 브라우저가 이 앱의 기록을 자동으로 지우지 않도록 보호 중이야.':'기록은 이 브라우저에 저장돼. 정기적으로 백업 파일을 내보내 두면 안전해.'}).catch(()=>{})}else $('storageInfo').textContent='기록은 이 브라우저에 저장돼. 정기적으로 백업 파일을 내보내 두면 안전해.';
+
+// ===== 날짜 롤오버: 앱을 켜 둔 채 자정이 지나도 새 날짜로 기록되게 =====
+let lastToday=today();
+function rollover(){const t=today();$('recordDate').max=t;if(t===lastToday)return;['recordDate','analysisDate','reviewDate','examDate','mistakeDate'].forEach(id=>{if($(id).value===lastToday)$(id).value=t});if(selDate===lastToday)selDate=t;const n=new Date();if(calView.y===+lastToday.slice(0,4)&&calView.m===+lastToday.slice(5,7)-1)calView={y:n.getFullYear(),m:n.getMonth()};lastToday=t;$('todayLabel').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});renderAll();renderTimer();if($('review').classList.contains('active'))loadReview()}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)rollover()});window.addEventListener('focus',rollover);setInterval(rollover,30000);
+
+// ===== 기기 간 동기화 (Firebase Auth + Firestore) =====
+// 기록·시험·오답·회고·공부방향은 월별 문서로 나눠 저장하고, 기기마다 합집합으로 병합해. 삭제는 tombstone(del)으로 전파해.
+const SYNC_KEY='studyCompassSyncV1',FB_VER='10.12.2';
+let syncLocal={};try{syncLocal=JSON.parse(localStorage.getItem(SYNC_KEY)||'{}')||{}}catch(e){}
+const saveSyncLocal=()=>{try{localStorage.setItem(SYNC_KEY,JSON.stringify(syncLocal))}catch(e){}};
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const sync={adapter:null,user:null,unsub:null,timer:null,hashes:{},pushing:false,again:false};
+let prevSig={},prevIds={records:{},exams:{},mistakes:{}};
+const monthOf=d=>typeof d==='string'&&/^\d{4}-\d{2}/.test(d)?d.slice(0,7):'0000-00';
+const byId=(a,b)=>{const x=String(a.id),y=String(b.id);return x<y?-1:x>y?1:0};
+const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a<b?-1:a>b?1:0)):v);
+const emptyMonth=()=>({records:[],exams:[],mistakes:[],reviews:{},directions:{},del:{},mt:{}});
+const normMonth=d=>{const o=emptyMonth();if(d){['records','exams','mistakes'].forEach(n=>o[n]=Array.isArray(d[n])?[...d[n]].sort(byId):[]);['reviews','directions','del','mt'].forEach(n=>o[n]=d[n]&&typeof d[n]==='object'?d[n]:{})}return o};
+const normMeta=d=>({goal:d&&d.goal||300,gradeProfiles:d&&d.gradeProfiles||{},firstUse:d&&d.firstUse||null,metaAt:d&&d.metaAt||0});
+const localMeta=()=>normMeta({goal:state.goal,gradeProfiles:state.gradeProfiles,firstUse:state.firstUse,metaAt:state.metaAt});
+function snap(){prevSig={};Object.keys(state.reviews).forEach(k=>prevSig['r:'+k]=JSON.stringify(state.reviews[k]));Object.keys(state.directions).forEach(k=>prevSig['d:'+k]=JSON.stringify(state.directions[k]));prevSig.meta=JSON.stringify({g:state.goal,p:state.gradeProfiles});['records','exams','mistakes'].forEach(n=>{prevIds[n]={};state[n].forEach(x=>prevIds[n][String(x.id)]=monthOf(x.date))})}
+// save() 때마다 무엇이 바뀌었는지 비교해서 수정 시각(mt/metaAt)과 삭제 기록(del)을 남겨
+function trackChanges(){const now=Date.now(),cur={};Object.keys(state.reviews).forEach(k=>cur['r:'+k]=JSON.stringify(state.reviews[k]));Object.keys(state.directions).forEach(k=>cur['d:'+k]=JSON.stringify(state.directions[k]));Object.keys(cur).forEach(k=>{if(cur[k]!==prevSig[k])state.mt[k]=now});if(JSON.stringify({g:state.goal,p:state.gradeProfiles})!==prevSig.meta)state.metaAt=now;['records','exams','mistakes'].forEach(n=>{const seen={};state[n].forEach(x=>seen[String(x.id)]=1);Object.keys(prevIds[n]).forEach(id=>{if(!seen[id]&&!state.del[id])state.del[id]={t:now,m:prevIds[n][id]}})});snap()}
+function partition(){const P={},g=m=>P[m]??=emptyMonth();['records','exams','mistakes'].forEach(n=>state[n].forEach(x=>g(monthOf(x.date))[n].push(x)));[['reviews','r:'],['directions','d:']].forEach(([n,pre])=>Object.keys(state[n]).forEach(k=>{const m=g(monthOf(k));m[n][k]=state[n][k];if(state.mt[pre+k])m.mt[pre+k]=state.mt[pre+k]}));Object.entries(state.del).forEach(([id,v])=>{g(v.m||'0000-00').del[id]=v});Object.keys(P).forEach(m=>P[m]=normMonth(P[m]));return P}
+function mergeMonth(L,R){const out=emptyMonth();for(const src of[L,R])for(const[id,v]of Object.entries(src.del||{})){const o=out.del[id];if(!o||v.t>o.t)out.del[id]=v}
+['records','exams','mistakes'].forEach(n=>{const seen={};[...(L[n]||[]),...(R[n]||[])].forEach(x=>{const id=String(x.id);if(!seen[id]&&!out.del[id]){seen[id]=1;out[n].push(x)}});out[n].sort(byId)});
+[['reviews','r:'],['directions','d:']].forEach(([n,pre])=>{const a=L[n]||{},b=R[n]||{};new Set([...Object.keys(a),...Object.keys(b)]).forEach(k=>{const hasL=k in a,hasR=k in b,tl=(L.mt||{})[pre+k]||0,tr=(R.mt||{})[pre+k]||0;const useR=hasR&&(!hasL||tr>tl||(tr===tl&&JSON.stringify(b[k])>JSON.stringify(a[k])));out[n][k]=useR?b[k]:a[k];const t=Math.max(tl,tr);if(t)out.mt[pre+k]=t})});return out}
+function mergeMeta(L,R){if(!R)return L;const a=normMeta(L),b=normMeta(R),pick=b.metaAt>a.metaAt||(b.metaAt===a.metaAt&&canon({g:b.goal,p:b.gradeProfiles})>canon({g:a.goal,p:a.gradeProfiles}))?b:a;const fu=[a.firstUse,b.firstUse].filter(Boolean).sort()[0]||null;return{goal:pick.goal,gradeProfiles:pick.gradeProfiles,firstUse:fu,metaAt:pick.metaAt}}
+function applyMonth(m,M){['records','exams','mistakes'].forEach(n=>{state[n]=state[n].filter(x=>monthOf(x.date)!==m).concat(M[n])});[['reviews','r:'],['directions','d:']].forEach(([n,pre])=>{Object.keys(state[n]).forEach(k=>{if(monthOf(k)===m){delete state[n][k];delete state.mt[pre+k]}});Object.entries(M[n]).forEach(([k,v])=>{state[n][k]=v;if(M.mt[pre+k])state.mt[pre+k]=M.mt[pre+k]})});Object.keys(state.del).forEach(id=>{if((state.del[id].m||'0000-00')===m)delete state.del[id]});Object.assign(state.del,M.del)}
+function refreshAll(){$('goalInput').value=state.goal;renderAll();renderGrades();renderMistakes();if($('review').classList.contains('active'))loadReview()}
+function onRemote(docs){const remote={};docs.forEach(d=>remote[d.id]=d.data);let changed=false;
+const L0=localMeta(),M0=mergeMeta(L0,remote.meta||null);if(canon(M0)!==canon(L0)){state.goal=M0.goal;state.gradeProfiles=M0.gradeProfiles;state.metaAt=M0.metaAt;state.firstUse=M0.firstUse||state.firstUse;changed=true}sync.hashes.meta=remote.meta?canon(normMeta(remote.meta)):null;
+const P=partition();new Set([...Object.keys(P),...Object.keys(remote).filter(k=>k!=='meta')]).forEach(m=>{const L=P[m]||emptyMonth(),R=normMonth(remote[m]),M=mergeMonth(L,R);if(canon(M)!==canon(L)){applyMonth(m,M);changed=true}sync.hashes[m]=remote[m]?canon(R):null});
+if(changed){snap();persist();refreshAll()}syncPush()}
+async function syncPush(){if(!sync.adapter||!sync.user)return;if(sync.pushing){sync.again=true;return}sync.pushing=true;setBadge('sync');const uid=sync.user.uid;
+try{do{sync.again=false;const P=partition(),lm=localMeta();
+if(canon(lm)!==sync.hashes.meta){const out=await sync.adapter.update(uid,'meta',d=>mergeMeta(lm,d?normMeta(d):null));sync.hashes.meta=canon(normMeta(out))}
+for(const m of Object.keys(P)){if(canon(P[m])===sync.hashes[m])continue;const Lm=P[m];const out=await sync.adapter.update(uid,m,d=>mergeMonth(Lm,normMonth(d)));sync.hashes[m]=canon(normMonth(out))}
+}while(sync.again);syncLocal.last=Date.now();saveSyncLocal();setBadge('ok');syncMsg('')}
+catch(e){setBadge('offline');syncMsg(e&&e.code==='permission-denied'?'Firestore 보안 규칙 때문에 저장하지 못했어. SYNC_SETUP.md의 규칙을 확인해 줘.':'');clearTimeout(sync.timer);sync.timer=setTimeout(syncPush,15000)}
+finally{sync.pushing=false}}
+function scheduleSync(){if(!sync.adapter||!sync.user)return;clearTimeout(sync.timer);sync.timer=setTimeout(syncPush,1200)}
+function setBadge(k){const t=new Date(syncLocal.last||Date.now()),hm=`${pad(t.getHours())}:${pad(t.getMinutes())}`;$('syncBadge').textContent=k==='sync'?'☁ 동기화 중…':k==='ok'?`☁ 동기화됨 · ${hm}`:k==='offline'?'⚠ 오프라인 · 연결되면 자동으로 동기화돼':''}
+function syncMsg(t){$('syncMsg').textContent=t||''}
+function renderSyncUI(){const cfg=!!(window.SC_FIREBASE_CONFIG||window.SC_TEST_ADAPTER);$('syncAuth').hidden=!cfg||!!sync.user||!sync.adapter;$('syncUser').hidden=!sync.user;$('syncStatus').textContent=!cfg?'아직 동기화 설정이 안 되어 있어서 지금은 이 기기에만 저장돼. (SYNC_SETUP.md 참고)':sync.user?'로그인됨 · 다른 기기에서도 같은 계정으로 로그인하면 기록이 자동으로 합쳐져.':'로그인하면 휴대폰·PC 등 여러 기기에서 같은 기록을 볼 수 있어.';$('syncWho').textContent=sync.user?(sync.user.email||'로그인됨'):''}
+function startSync(user){if(sync.user&&sync.user.uid===user.uid)return;if(syncLocal.uid&&syncLocal.uid!==user.uid&&(state.records.length||state.exams.length||state.mistakes.length)&&!confirm('이 기기에는 다른 계정으로 동기화하던 기록이 남아 있어. 지금 로그인한 계정에 합칠까?\n(취소하면 로그아웃해.)')){sync.adapter.signOut();return}
+sync.user=user;syncLocal.uid=user.uid;saveSyncLocal();sync.hashes={};setBadge('sync');renderSyncUI();if(sync.unsub)sync.unsub();sync.unsub=sync.adapter.subscribe(user.uid,onRemote,err=>{setBadge('offline');syncMsg(err&&err.code==='permission-denied'?'Firestore 보안 규칙을 확인해 줘. (SYNC_SETUP.md)':'동기화 연결에 문제가 있어. 인터넷 연결을 확인해 줘.')})}
+function stopSync(){if(sync.unsub)sync.unsub();sync.unsub=null;sync.user=null;sync.hashes={};setBadge('');renderSyncUI()}
+async function makeFirebaseAdapter(cfg){const base=`https://www.gstatic.com/firebasejs/${FB_VER}/`;const[A,Au,Fs]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);const app=A.initializeApp(cfg),auth=Au.getAuth(app),db=Fs.getFirestore(app);
+return{onAuth:cb=>Au.onAuthStateChanged(auth,cb),signUp:(e,p)=>Au.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>Au.signInWithEmailAndPassword(auth,e,p),
+google:async()=>{const pr=new Au.GoogleAuthProvider();try{await Au.signInWithPopup(auth,pr)}catch(e){if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment')await Au.signInWithRedirect(auth,pr);else throw e}},
+signOut:()=>Au.signOut(auth),
+subscribe:(uid,cb,err)=>Fs.onSnapshot(Fs.collection(db,'users',uid,'data'),sn=>cb(sn.docs.map(d=>({id:d.id,data:d.data()}))),err),
+update:(uid,id,fn)=>Fs.runTransaction(db,async tx=>{const ref=Fs.doc(db,'users',uid,'data',id),sn=await tx.get(ref),out=JSON.parse(JSON.stringify(fn(sn.exists()?sn.data():null)));tx.set(ref,out);return out})}}
+async function initSync(){if(!window.SC_TEST_ADAPTER&&!window.SC_FIREBASE_CONFIG){renderSyncUI();return}
+try{sync.adapter=window.SC_TEST_ADAPTER||await makeFirebaseAdapter(window.SC_FIREBASE_CONFIG)}catch(e){sync.adapter=null;setBadge('offline');renderSyncUI();syncMsg('동기화 모듈을 불러오지 못했어. 인터넷 연결을 확인해 줘.');return}
+sync.adapter.onAuth(u=>{u?startSync(u):stopSync()});renderSyncUI()}
+const authErr=e=>({'auth/invalid-credential':'이메일 또는 비밀번호가 맞지 않아.','auth/wrong-password':'이메일 또는 비밀번호가 맞지 않아.','auth/user-not-found':'가입되지 않은 이메일이야. 회원가입을 눌러 줘.','auth/email-already-in-use':'이미 가입된 이메일이야. 로그인을 눌러 줘.','auth/weak-password':'비밀번호는 6자 이상으로 해 줘.','auth/invalid-email':'이메일 형식을 확인해 줘.','auth/network-request-failed':'인터넷 연결을 확인해 줘.','auth/popup-closed-by-user':'로그인 창이 닫혔어.','auth/operation-not-allowed':'Firebase에서 이 로그인 방식이 아직 켜지지 않았어.','auth/unauthorized-domain':'Firebase의 승인된 도메인에 이 사이트 주소를 추가해 줘.'}[e&&e.code]||('로그인에 실패했어: '+((e&&e.message)||e)));
+const authDo=fn=>{if(!sync.adapter)return;syncMsg('');Promise.resolve().then(fn).catch(e=>syncMsg(authErr(e)))};
+$('syncSignIn').onclick=()=>authDo(()=>sync.adapter.signIn($('syncEmail').value.trim(),$('syncPw').value));
+$('syncSignUp').onclick=()=>authDo(()=>sync.adapter.signUp($('syncEmail').value.trim(),$('syncPw').value));
+$('syncGoogle').onclick=()=>authDo(()=>sync.adapter.google());
+$('syncOut').onclick=()=>authDo(()=>sync.adapter.signOut());
+$('syncNow').onclick=()=>{sync.hashes={};if(sync.user){sync.unsub&&sync.unsub();sync.unsub=sync.adapter.subscribe(sync.user.uid,onRemote,()=>setBadge('offline'))}};
+window.addEventListener('online',()=>{if(!sync.adapter)initSync();else syncPush()});
+snap();$('recordDate').max=today();
 
 function renderAll(){renderHome();renderRecords();renderAnalysis();renderWeekly();renderArchive()}
 $('todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 renderAll();
-renderTimer();renderGrades();renderMistakes();
-if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+renderTimer();renderGrades();renderMistakes();initSync();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){const hadCtl=!!navigator.serviceWorker.controller;let reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadCtl&&!reloaded){reloaded=true;location.reload()}});navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{})}
 </script>
 </body></html>
