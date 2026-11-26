@@ -16,7 +16,7 @@ h2{font-size:16px;margin:0 0 13px}h3{font-size:14px;margin:0 0 8px}.muted{color:
 label{display:block;font-size:12px;color:#64748b;margin:11px 0 6px}input,select,textarea{width:100%;border:1px solid #dfe5ed;border-radius:11px;padding:12px;background:#fbfcfe;color:var(--ink);font:inherit;font-size:14px}textarea{min-height:80px;resize:vertical}
 button.primary{border:0;background:var(--blue);color:white;border-radius:11px;padding:12px 15px;font-weight:700;margin-top:12px;width:100%}button.secondary{border:0;background:var(--blue2);color:#496b94;border-radius:10px;padding:8px 11px;font-weight:650}button.danger{border:0;background:#f8eeee;color:var(--red);border-radius:9px;padding:7px 9px}
 .row{display:flex;gap:9px;align-items:center}.row>*{flex:1}.item{display:flex;align-items:center;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item .grow{flex:1;min-width:0}.item small{display:block;color:var(--muted);margin-top:3px}.check{width:19px;height:19px;accent-color:var(--blue)}.bar{height:8px;background:#edf1f6;border-radius:9px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:#7798bd;border-radius:9px}
-.timer-clock{font-size:38px;font-weight:750;letter-spacing:1px;text-align:center;font-variant-numeric:tabular-nums;margin:12px 0}.timer-actions{display:flex;gap:9px}.timer-actions button{flex:1}.timer-status{text-align:center;color:var(--muted);font-size:12px}.empty{color:var(--muted);font-size:13px;padding:12px 0}.subjectline{display:flex;justify-content:space-between;font-size:13px;margin:10px 0 4px}
+.chartrow{display:grid;grid-template-columns:72px 1fr 54px;gap:8px;align-items:center;margin:11px 0;font-size:12px}.charttrack{height:10px;background:#edf1f6;border-radius:9px;overflow:hidden}.charttrack span{display:block;height:100%;background:#7798bd;border-radius:9px}.pill{display:inline-block;background:#edf3fa;color:#496b94;border-radius:20px;padding:4px 8px;font-size:11px;margin:2px}.smallbtn{border:0;background:#e8f0fa;color:#496b94;border-radius:8px;padding:7px 9px;font-weight:650}.sectionhint{font-size:12px;color:var(--muted);line-height:1.5;margin:-5px 0 10px}.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{background:#f6f8fb;border-radius:12px;padding:12px}.metric b{font-size:20px;display:block;margin-top:4px}.timer-clock{font-size:38px;font-weight:750;letter-spacing:1px;text-align:center;font-variant-numeric:tabular-nums;margin:12px 0}.timer-actions{display:flex;gap:9px}.timer-actions button{flex:1}.timer-status{text-align:center;color:var(--muted);font-size:12px}.empty{color:var(--muted);font-size:13px;padding:12px 0}.subjectline{display:flex;justify-content:space-between;font-size:13px;margin:10px 0 4px}
 footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 </style>
 </head>
@@ -24,7 +24,7 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 <header><h1>Study Compass</h1><div class="sub" id="todayLabel">오늘의 학습 나침반</div></header>
 <main>
 <nav class="tabs">
-<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="settings">목표 설정</button>
+<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="grades">성적 관리</button><button class="tab" data-tab="mistakes">오답 분석</button><button class="tab" data-tab="weekly">주간 리포트</button><button class="tab" data-tab="settings">목표 설정</button>
 </nav>
 <section class="panel active" id="home">
 <div class="card" id="timerCard"><h2>실시간 공부 타이머</h2><div class="timer-status" id="timerStatus">공부할 준비가 되면 시작 버튼을 눌러 줘.</div><div class="timer-clock" id="timerClock">00:00:00</div><div class="timer-actions"><button class="primary" id="timerStart" style="margin-top:0">▶ 공부 시작</button><button class="primary" id="timerStop" style="margin-top:0;background:#b76d6d" disabled>■ 정지</button></div><div id="timerSaveArea" hidden style="margin-top:15px"><div class="muted" id="timerPendingText"></div><label for="timerSubject">공부한 과목 선택</label><select id="timerSubject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select><label for="timerNote">학습 내용 (선택)</label><textarea id="timerNote" placeholder="무엇을 공부했는지 적어 줘"></textarea><button class="primary" id="timerSave">과목 선택 후 기록 저장</button><button class="secondary" id="timerDiscard" style="width:100%;margin-top:8px">기록 취소</button></div></div>
@@ -55,6 +55,34 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 <button class="primary" id="saveReview">회고 저장하기</button><div class="muted" id="reviewMessage" aria-live="polite"></div>
 </div>
 </section>
+<section class="panel" id="grades">
+<div class="card"><h2>목표 등급 · 현재 성적</h2><p class="sectionhint">과목별 목표 등급과 현재 성적을 저장해 두면 목표와의 차이를 확인할 수 있어.</p>
+<div class="row"><div><label for="profileSubject">과목</label><select id="profileSubject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select></div><div><label for="profileCurrent">현재 등급</label><select id="profileCurrent"><option value="1">1등급</option><option value="2">2등급</option><option value="3" selected>3등급</option><option value="4">4등급</option><option value="5">5등급</option><option value="6">6등급</option><option value="7">7등급</option><option value="8">8등급</option><option value="9">9등급</option></select></div><div><label for="profileTarget">목표 등급</label><select id="profileTarget"><option value="1">1등급</option><option value="2" selected>2등급</option><option value="3">3등급</option><option value="4">4등급</option><option value="5">5등급</option><option value="6">6등급</option><option value="7">7등급</option><option value="8">8등급</option><option value="9">9등급</option></select></div></div>
+<button class="primary" id="saveProfile">과목 성적 저장</button><div id="profileList"></div></div>
+<div class="card"><h2>모의고사 성적 입력</h2><p class="sectionhint">시험별·과목별 성적을 누적해 성적 변화 추이를 볼 수 있어. 등급은 필수, 원점수는 선택이야.</p>
+<label for="examName">시험명</label><input id="examName" placeholder="예: 2026년 9월 모의고사">
+<div class="row"><div><label for="examDate">시험 날짜</label><input type="date" id="examDate"></div><div><label for="examSubject">과목</label><select id="examSubject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select></div></div>
+<div class="row"><div><label for="examGrade">등급</label><select id="examGrade"><option value="1">1등급</option><option value="2">2등급</option><option value="3" selected>3등급</option><option value="4">4등급</option><option value="5">5등급</option><option value="6">6등급</option><option value="7">7등급</option><option value="8">8등급</option><option value="9">9등급</option></select></div><div><label for="examScore">원점수 (선택)</label><input type="number" id="examScore" min="0" max="100" placeholder="예: 82"></div></div>
+<button class="primary" id="saveExam">모의고사 성적 추가</button><div id="examList"></div></div>
+<div class="card"><h2>성적 변화</h2><div id="gradeTrend" class="empty">모의고사 성적을 입력하면 변화가 표시돼.</div></div>
+</section>
+<section class="panel" id="mistakes">
+<div class="card"><h2>문항별 오답 기록</h2><p class="sectionhint">해설을 작성하는 대신 문제의 배점·단원·유형·오답 원인을 기록해. 같은 유형이 반복되는지 자동으로 분석해 줄게.</p>
+<label for="mistakeExam">시험명</label><input id="mistakeExam" placeholder="예: 2026년 9월 모의고사">
+<div class="row"><div><label for="mistakeDate">시험 날짜</label><input type="date" id="mistakeDate"></div><div><label for="mistakeNumber">문항 번호</label><input type="number" id="mistakeNumber" min="1" placeholder="예: 17"></div></div>
+<div class="row"><div><label for="mistakeSubject">과목</label><select id="mistakeSubject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select></div><div><label for="mistakePoints">배점</label><select id="mistakePoints"><option value="2">2점</option><option value="3" selected>3점</option><option value="4">4점</option><option value="5">5점</option><option value="6">6점</option><option value="other">기타/미상</option></select></div></div>
+<div class="row"><div><label for="mistakeMajor">대단원</label><select id="mistakeMajor"></select></div><div><label for="mistakeType">세부 유형</label><select id="mistakeType"></select></div></div>
+<label for="mistakeReason">오답 원인</label><select id="mistakeReason"><option>개념·원리 이해 부족</option><option>조건·발문 해석 실수</option><option>선지 비교·판단 실수</option><option>계산·부호 실수</option><option>시간 부족</option><option>풀이 전략·접근 방법 미흡</option><option>암기·어휘 부족</option><option>찍어서 맞힘 / 확신 부족</option><option>기타</option></select>
+<label for="mistakeMemo">추가 메모 (선택)</label><textarea id="mistakeMemo" placeholder="예: 두 선지의 표현 차이를 구분하지 못함"></textarea>
+<button class="primary" id="saveMistake">오답 기록 저장</button><div id="mistakeMessage" class="muted" aria-live="polite"></div></div>
+<div class="card"><h2>누적 오답 분석</h2><div class="two"><div class="metric"><span class="muted">누적 오답</span><b id="mistakeCount">0문항</b></div><div class="metric"><span class="muted">기록된 배점</span><b id="mistakePointsTotal">0점</b></div></div><div id="weaknessSummary" class="empty">오답을 기록하면 취약 유형이 분석돼.</div></div>
+<div class="card"><h2>오답 기록 목록</h2><div id="mistakeList"></div></div>
+</section>
+<section class="panel" id="weekly">
+<div class="card"><h2>최근 7일 공부 리포트</h2><p class="sectionhint">오늘을 포함한 최근 7일의 공부 시간을 집계해.</p><div class="two"><div class="metric"><span class="muted">총 공부 시간</span><b id="weekTotal">0분</b></div><div class="metric"><span class="muted">하루 평균</span><b id="weekAverage">0분</b></div></div><div id="weekChart"></div></div>
+<div class="card"><h2>과목별 공부 시간</h2><div id="weekSubjects" class="empty">공부 기록이 쌓이면 과목별 통계가 표시돼.</div></div>
+<div class="card"><h2>이번 주 학습 점검</h2><div id="weekInsight" class="empty">공부 기록을 바탕으로 주간 요약을 제공해.</div></div>
+</section>
 <section class="panel" id="settings">
 <div class="card"><h2>하루 공부 목표</h2><label for="goalInput">목표 시간 (분)</label><input type="number" id="goalInput" min="1" step="10" placeholder="300"><button class="primary" id="saveGoal">목표 저장하기</button><div class="muted" id="goalMessage" aria-live="polite"></div></div>
 <div class="card"><h2>데이터 안내</h2><p class="muted">기록은 현재 사용 중인 브라우저에 저장돼. 다른 기기와 자동으로 동기화되지는 않으니 브라우저 데이터를 삭제하기 전에 백업해 줘.</p><button class="secondary" id="exportData">기록 백업 파일 내보내기</button></div>
@@ -64,15 +92,15 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 <script>
 const KEY='studyCompassV2';
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-let state={goal:300,records:[],directions:{},reviews:{},activeTimer:null,pendingSession:null};
-try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old)state={...state,...old}}catch(e){}
+let state={goal:300,records:[],directions:{},reviews:{},activeTimer:null,pendingSession:null,gradeProfiles:{},exams:[],mistakes:[]};
+try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old)state={...state,...old,gradeProfiles:old.gradeProfiles||{},exams:old.exams||[],mistakes:old.mistakes||[]}}catch(e){}
 const $=id=>document.getElementById(id);
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 const mins=n=>`${Math.floor(n/60)}시간 ${n%60}분`.replace(/^0시간 /,'');
 function recordsOn(date){return state.records.filter(r=>r.date===date)}
 function totalOn(date){return recordsOn(date).reduce((s,r)=>s+r.minutes,0)}
 function subjectsOn(date){const m={};recordsOn(date).forEach(r=>m[r.subject]=(m[r.subject]||0)+r.minutes);return m}
-function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview()}
+function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview();if(name==='grades')renderGrades();if(name==='mistakes')renderMistakes();if(name==='weekly')renderWeekly()}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.goto)));
 function renderHome(){const d=today(),t=totalOn(d),pct=Math.min(100,Math.round(t/state.goal*100));$('todayTotal').textContent=mins(t);$('goalText').textContent=mins(state.goal);$('goalBar').style.width=pct+'%';$('goalProgress').textContent=`목표의 ${pct}% 달성`;
@@ -109,10 +137,38 @@ $('timerStop').onclick=stopTimer;
 $('timerSave').onclick=()=>{const p=state.pendingSession;if(!p)return;const minutes=Math.max(1,Math.round(p.seconds/60));state.records.push({id:Date.now()+Math.random(),date:p.date,subject:$('timerSubject').value,minutes,seconds:p.seconds,note:$('timerNote').value.trim(),source:'timer'});state.pendingSession=null;$('timerNote').value='';save();renderAll();renderTimer();$('timerStatus').textContent=`${mins(minutes)} 기록을 저장했어!`};
 $('timerDiscard').onclick=()=>{if(!state.pendingSession)return;state.pendingSession=null;save();renderTimer()};
 if(state.activeTimer){timerTicker=setInterval(renderTimer,1000)}
-function renderAll(){renderHome();renderRecords();renderAnalysis()}
+// 성적 관리 · 시험 성적 · 오답 유형 분석
+const topicMap={
+'국어':{'독서':['정보 일치·불일치','추론','핵심 내용·주제','글의 구조·전개 방식','보기 적용·비교','어휘·문맥','두 선지의 공통점·차이점'],'현대시':['시어의 의미·기능','화자의 정서·태도','표현법·이미지','시상 전개','구절의 의도·맥락','두 작품 비교'],'고전시가':['어휘 해석','시어·구절의 의미','화자의 정서·태도','표현·수사','작품 간 비교'],'현대소설':['인물 심리·관계','사건·갈등 전개','서술자·시점','서술 방식·표현','소재의 기능','보기 적용'],'고전소설':['인물·관계','사건 전개','인물의 심리·태도','서술·표현','고전 어휘','보기 적용'],'극·수필':['인물·대화','갈등·사건','장면·구성','표현·주제'],'언어와 매체':['음운','단어·형태소','문장·문법','중세 국어','매체 자료 분석'],'화법과 작문':['말하기 전략','작문 과정','자료 활용','고쳐쓰기·표현']},
+'수학':{'수학Ⅰ':['지수·로그','지수함수·로그함수','삼각함수','사인법칙·코사인법칙','등차·등비수열','수열의 합','귀납적 정의'],'수학Ⅱ':['함수의 극한','연속','미분계수·도함수','접선·그래프 해석','증가·감소·극값','부정적분','정적분','넓이','위치·속도·가속도'],'미적분':['수열의 극한','급수','여러 가지 미분법','합성·역함수 미분','접선·그래프','도함수 활용','여러 가지 적분법','치환·부분적분','정적분 활용','넓이·부피'],'확률과 통계':['경우의 수','순열·조합','중복순열·중복조합','확률','조건부확률','이항분포','정규분포','통계적 추정']},
+'영어':{'어휘·어법':['어휘 의미','어법 판단','문장 구조'],'독해':['주제·제목','요지·주장','빈칸 추론','함의 추론','무관한 문장','문장 삽입','글의 순서','요약문 완성','장문 독해'],'듣기':['대화 내용','목적·의도','수치·정보 파악']},
+'물리학':{'역학과 에너지':['운동의 표현','뉴턴 운동 법칙','운동량·충격량','역학적 에너지','열역학'],'전기와 자기':['전기장·전위','축전기','전류·저항','자기장·전자기 유도'],'파동과 현대 물리':['파동의 성질','빛·간섭','광전 효과','원자·핵']},
+'사회문화':{'사회·문화 현상의 탐구':['연구 방법','자료 수집','연구 윤리'],'개인과 사회 구조':['사회화','사회 집단·조직','일탈 행동'],'문화와 일상생활':['문화 이해 태도','하위문화·대중문화'],'사회 계층과 불평등':['계층 구조','사회 이동','빈곤·복지'],'현대 사회와 사회 변동':['사회 변동','세계화']},
+'한국사':{'전근대 한국사':['고대 국가','고려','조선 전기','조선 후기'],'근대 국민 국가 수립':['개항·개화','국권 피탈','독립운동'],'일제 식민 통치':['식민 통치','민족 운동'],'현대 사회':['광복·정부 수립','민주화','경제 발전']},
+'기타':{'기타':['개념 이해','자료 해석','계산·적용','선지 판단']}
+};
+const topicKeys=subject=>Object.keys(topicMap[subject]||topicMap['기타']);
+function refreshMistakeTopics(){const sub=$('mistakeSubject').value,maj=$('mistakeMajor'),typ=$('mistakeType'),keys=topicKeys(sub);maj.innerHTML=keys.map(k=>`<option>${esc(k)}</option>`).join('');refreshMistakeTypes()}
+function refreshMistakeTypes(){const sub=$('mistakeSubject').value,major=$('mistakeMajor').value,arr=(topicMap[sub]||topicMap['기타'])[major]||[];$('mistakeType').innerHTML=arr.map(x=>`<option>${esc(x)}</option>`).join('')}
+$('mistakeSubject').addEventListener('change',refreshMistakeTopics);$('mistakeMajor').addEventListener('change',refreshMistakeTypes);refreshMistakeTopics();
+$('examDate').value=today();$('mistakeDate').value=today();
+$('saveProfile').onclick=()=>{const subject=$('profileSubject').value;state.gradeProfiles[subject]={current:Number($('profileCurrent').value),target:Number($('profileTarget').value)};save();renderGrades()};
+function renderGrades(){const entries=Object.entries(state.gradeProfiles);$('profileList').innerHTML=entries.length?entries.map(([s,v])=>`<div class="item"><div class="grow"><b>${esc(s)}</b><small>현재 ${v.current}등급 · 목표 ${v.target}등급 · ${v.current>v.target?'목표까지 '+(v.current-v.target)+'등급 차이':v.current===v.target?'목표 등급 도달':'목표보다 높은 등급'}</small></div><button class="danger" data-del-profile="${esc(s)}">삭제</button></div>`).join(''):'<div class="empty">과목별 현재 등급과 목표 등급을 입력해 줘.</div>';
+$('examList').innerHTML=state.exams.length?[...state.exams].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="item"><div class="grow"><b>${esc(x.subject)} · ${x.grade}등급${x.score!==null?' · '+x.score+'점':''}</b><small>${esc(x.name)} · ${x.date}</small></div><button class="danger" data-del-exam="${x.id}">삭제</button></div>`).join(''):'<div class="empty">아직 입력한 모의고사 성적이 없어.</div>';
+const bySub={};state.exams.forEach(x=>(bySub[x.subject]??=[]).push(x));const bits=Object.entries(bySub).map(([sub,arr])=>{arr.sort((a,b)=>a.date.localeCompare(b.date));const latest=arr[arr.length-1],first=arr[0];return `<div class="item"><div class="grow"><b>${esc(sub)} · 최근 ${latest.grade}등급</b><small>${arr.length>1?`기록 시작 ${first.grade}등급 → 최근 ${latest.grade}등급`:`${latest.name} · ${latest.date}`}</small></div><span class="pill">${arr.length}회</span></div>`}).join('');$('gradeTrend').innerHTML=bits||'모의고사 성적을 입력하면 변화가 표시돼.';
+}
+$('grades').addEventListener('click',e=>{if(e.target.dataset.delProfile){delete state.gradeProfiles[e.target.dataset.delProfile];save();renderGrades()}if(e.target.dataset.delExam){state.exams=state.exams.filter(x=>String(x.id)!==e.target.dataset.delExam);save();renderGrades()}});
+$('saveExam').onclick=()=>{const name=$('examName').value.trim(),date=$('examDate').value||today(),subject=$('examSubject').value,grade=Number($('examGrade').value),raw=$('examScore').value,score=raw===''?null:Number(raw);if(!name){alert('시험명을 입력해 줘.');return}if(score!==null&&(!Number.isFinite(score)||score<0||score>100)){alert('원점수는 0~100 사이로 입력해 줘.');return}state.exams.push({id:Date.now()+Math.random(),name,date,subject,grade,score});save();$('examScore').value='';renderGrades()};
+$('saveMistake').onclick=()=>{const exam=$('mistakeExam').value.trim(),number=Number($('mistakeNumber').value);if(!exam||!Number.isInteger(number)||number<1){$('mistakeMessage').textContent='시험명과 올바른 문항 번호를 입력해 줘.';return}const pts=$('mistakePoints').value;state.mistakes.push({id:Date.now()+Math.random(),exam,date:$('mistakeDate').value||today(),number,subject:$('mistakeSubject').value,points:pts==='other'?null:Number(pts),major:$('mistakeMajor').value,type:$('mistakeType').value,reason:$('mistakeReason').value,memo:$('mistakeMemo').value.trim()});save();$('mistakeNumber').value='';$('mistakeMemo').value='';$('mistakeMessage').textContent='오답이 저장됐어. 누적 취약 유형 분석에 반영했어!';renderMistakes()};
+function renderMistakes(){const arr=state.mistakes,known=arr.filter(x=>x.points!==null).reduce((n,x)=>n+x.points,0);$('mistakeCount').textContent=arr.length+'문항';$('mistakePointsTotal').textContent=known+'점';const groups={};arr.forEach(x=>{const k=`${x.subject} · ${x.major} · ${x.type}`;groups[k]=(groups[k]||0)+1});const sorted=Object.entries(groups).sort((a,b)=>b[1]-a[1]);$('weaknessSummary').innerHTML=sorted.length?'<h3>반복 오답 유형</h3>'+sorted.slice(0,8).map(([k,n])=>`<div class="chartrow"><span>${esc(k.split(' · ').slice(0,2).join(' · '))}</span><div class="charttrack"><span style="width:${n/Math.max(...sorted.map(x=>x[1]))*100}%"></span></div><b>${n}문항</b></div>`).join('')+'<p class="sectionhint">세부 유형별로 오답 횟수를 집계했어. 기록이 늘어날수록 반복되는 약점을 더 잘 확인할 수 있어.</p>':'오답을 기록하면 취약 유형이 분석돼.';
+$('mistakeList').innerHTML=arr.length?[...arr].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="item"><div class="grow"><b>${esc(x.subject)} ${x.number}번 · ${x.points===null?'배점 미상':x.points+'점'}</b><small>${esc(x.exam)} · ${x.date}<br>${esc(x.major)} / ${esc(x.type)}<br>원인: ${esc(x.reason)}${x.memo?' · '+esc(x.memo):''}</small></div><button class="danger" data-del-mistake="${x.id}">삭제</button></div>`).join(''):'<div class="empty">아직 등록한 오답이 없어.</div>'}
+$('mistakes').addEventListener('click',e=>{if(e.target.dataset.delMistake){state.mistakes=state.mistakes.filter(x=>String(x.id)!==e.target.dataset.delMistake);save();renderMistakes()}});
+function renderWeekly(){const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;days.push({date:key,label:['일','월','화','수','목','금','토'][d.getDay()],minutes:totalOn(key)})}const sum=days.reduce((n,x)=>n+x.minutes,0),max=Math.max(1,...days.map(x=>x.minutes));$('weekTotal').textContent=mins(sum);$('weekAverage').textContent=mins(Math.round(sum/7));$('weekChart').innerHTML=days.map(x=>`<div class="chartrow"><span>${x.label}요일</span><div class="charttrack"><span style="width:${x.minutes/max*100}%"></span></div><b>${mins(x.minutes)}</b></div>`).join('');const subs={};days.forEach(x=>recordsOn(x.date).forEach(r=>subs[r.subject]=(subs[r.subject]||0)+r.minutes));$('weekSubjects').innerHTML=Object.keys(subs).length?Object.entries(subs).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="subjectline"><span>${esc(s)}</span><b>${mins(n)}</b></div><div class="bar"><span style="width:${n/Math.max(1,sum)*100}%"></span></div>`).join(''):'최근 7일간 공부 기록이 없어.';const best=[...days].sort((a,b)=>b.minutes-a.minutes)[0];$('weekInsight').innerHTML=sum?`최근 7일 동안 총 <b>${mins(sum)}</b> 공부했어. 하루 평균은 <b>${mins(Math.round(sum/7))}</b>이고, 가장 많이 공부한 날은 <b>${best.date} (${mins(best.minutes)})</b>이야.`:'공부 기록을 입력하면 주간 요약을 확인할 수 있어.'}
+
+function renderAll(){renderHome();renderRecords();renderAnalysis();renderWeekly()}
 $('todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 renderAll();
-renderTimer();
+renderTimer();renderGrades();renderMistakes();
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body></html>
