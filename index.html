@@ -17,6 +17,7 @@ label{display:block;font-size:12px;color:#64748b;margin:11px 0 6px}input,select,
 button.primary{border:0;background:var(--blue);color:white;border-radius:11px;padding:12px 15px;font-weight:700;margin-top:12px;width:100%}button.secondary{border:0;background:var(--blue2);color:#496b94;border-radius:10px;padding:8px 11px;font-weight:650}button.danger{border:0;background:#f8eeee;color:var(--red);border-radius:9px;padding:7px 9px}
 .row{display:flex;gap:9px;align-items:center}.row>*{flex:1}.item{display:flex;align-items:center;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item .grow{flex:1;min-width:0}.item small{display:block;color:var(--muted);margin-top:3px}.check{width:19px;height:19px;accent-color:var(--blue)}.bar{height:8px;background:#edf1f6;border-radius:9px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:#7798bd;border-radius:9px}
 .chartrow{display:grid;grid-template-columns:72px 1fr 54px;gap:8px;align-items:center;margin:11px 0;font-size:12px}.charttrack{height:10px;background:#edf1f6;border-radius:9px;overflow:hidden}.charttrack span{display:block;height:100%;background:#7798bd;border-radius:9px}.pill{display:inline-block;background:#edf3fa;color:#496b94;border-radius:20px;padding:4px 8px;font-size:11px;margin:2px}.smallbtn{border:0;background:#e8f0fa;color:#496b94;border-radius:8px;padding:7px 9px;font-weight:650}.sectionhint{font-size:12px;color:var(--muted);line-height:1.5;margin:-5px 0 10px}.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{background:#f6f8fb;border-radius:12px;padding:12px}.metric b{font-size:20px;display:block;margin-top:4px}.timer-clock{font-size:38px;font-weight:750;letter-spacing:1px;text-align:center;font-variant-numeric:tabular-nums;margin:12px 0}.timer-actions{display:flex;gap:9px}.timer-actions button{flex:1}.timer-status{text-align:center;color:var(--muted);font-size:12px}.empty{color:var(--muted);font-size:13px;padding:12px 0}.subjectline{display:flex;justify-content:space-between;font-size:13px;margin:10px 0 4px}
+.calnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.calnav .smallbtn{width:40px;font-size:18px}.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.dow{text-align:center;font-size:11px;color:var(--muted);padding:2px 0}.day{aspect-ratio:1;border:0;border-radius:9px;background:#f1f4f8;color:var(--ink);font-size:12px;padding:0;display:block}i.day{width:16px;aspect-ratio:auto;height:16px;border-radius:5px}.day.blank{background:none}.day.l1{background:#d6e4f3}.day.l2{background:#aec9e6}.day.l3{background:#7798bd;color:#fff}.day.l4{background:#4a6f9a;color:#fff}.day.today{outline:2px solid var(--green);outline-offset:-2px}.day.sel{box-shadow:inset 0 0 0 2px var(--ink)}.legend{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-top:12px;font-size:11px;color:var(--muted)}.monrow{width:100%;text-align:left;border:0;background:none;color:inherit;font:inherit;padding:11px 0;border-bottom:1px solid var(--line);display:block}.monrow small{display:block;color:var(--muted);margin-top:3px}
 footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 </style>
 </head>
@@ -24,7 +25,7 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 <header><h1>Study Compass</h1><div class="sub" id="todayLabel">오늘의 학습 나침반</div></header>
 <main>
 <nav class="tabs">
-<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="grades">성적 관리</button><button class="tab" data-tab="mistakes">오답 분석</button><button class="tab" data-tab="weekly">주간 리포트</button><button class="tab" data-tab="settings">목표 설정</button>
+<button class="tab active" data-tab="home">오늘</button><button class="tab" data-tab="record">공부 기록</button><button class="tab" data-tab="analysis">일간 분석</button><button class="tab" data-tab="review">회고</button><button class="tab" data-tab="grades">성적 관리</button><button class="tab" data-tab="mistakes">오답 분석</button><button class="tab" data-tab="weekly">주간 리포트</button><button class="tab" data-tab="archive">기록 보관함</button><button class="tab" data-tab="settings">목표 설정</button>
 </nav>
 <section class="panel active" id="home">
 <div class="card" id="timerCard"><h2>실시간 공부 타이머</h2><div class="timer-status" id="timerStatus">공부할 준비가 되면 시작 버튼을 눌러 줘.</div><div class="timer-clock" id="timerClock">00:00:00</div><div class="timer-actions"><button class="primary" id="timerStart" style="margin-top:0">▶ 공부 시작</button><button class="primary" id="timerStop" style="margin-top:0;background:#b76d6d" disabled>■ 정지</button></div><div id="timerSaveArea" hidden style="margin-top:15px"><div class="muted" id="timerPendingText"></div><label for="timerSubject">공부한 과목 선택</label><select id="timerSubject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>사회문화</option><option>한국사</option><option>기타</option></select><label for="timerNote">학습 내용 (선택)</label><textarea id="timerNote" placeholder="무엇을 공부했는지 적어 줘"></textarea><button class="primary" id="timerSave">과목 선택 후 기록 저장</button><button class="secondary" id="timerDiscard" style="width:100%;margin-top:8px">기록 취소</button></div></div>
@@ -83,24 +84,38 @@ footer{text-align:center;color:#9aa5b4;font-size:11px;padding:20px}
 <div class="card"><h2>과목별 공부 시간</h2><div id="weekSubjects" class="empty">공부 기록이 쌓이면 과목별 통계가 표시돼.</div></div>
 <div class="card"><h2>이번 주 학습 점검</h2><div id="weekInsight" class="empty">공부 기록을 바탕으로 주간 요약을 제공해.</div></div>
 </section>
+<section class="panel" id="archive">
+<div class="card"><h2>전체 누적 기록</h2><div class="muted" id="archiveSince"></div>
+<div class="stat" style="margin-top:10px"><span class="muted">총 누적 공부 시간</span><strong id="allTotal" style="font-size:28px">0분</strong></div>
+<div class="two" style="margin-top:10px"><div class="metric"><span class="muted">공부한 날</span><b id="allDays">0일</b></div><div class="metric"><span class="muted">공부한 날 평균</span><b id="allAvg">0분</b></div></div></div>
+<div class="card"><h2>연속 공부일</h2><div class="two"><div class="metric"><span class="muted">현재 연속</span><b id="streakCur">0일</b></div><div class="metric"><span class="muted">최장 연속</span><b id="streakMax">0일</b></div></div><div class="muted" id="streakHint" style="margin-top:8px"></div></div>
+<div class="card"><h2>공부 달력</h2>
+<div class="calnav"><button class="smallbtn" data-cal-nav="-1" aria-label="이전 달">‹</button><b id="calTitle"></b><button class="smallbtn" data-cal-nav="1" aria-label="다음 달">›</button></div>
+<div class="cal" id="calGrid"></div>
+<div class="legend"><span>적게</span><i class="day l1"></i><i class="day l2"></i><i class="day l3"></i><i class="day l4"></i><span>목표 달성</span></div></div>
+<div class="card"><h2 id="dayTitle">일별 기록</h2><div id="archiveDay"></div></div>
+<div class="card"><h2 id="monthTitle">월별 기록</h2><div class="two"><div class="metric"><span class="muted">월 총 공부 시간</span><b id="monTotal">0분</b></div><div class="metric"><span class="muted">일평균</span><b id="monAvg">0분</b></div></div><div class="muted" id="monExtra" style="margin-top:8px"></div><div id="monSubjects"></div></div>
+<div class="card"><h2>월별 전체 목록</h2><div id="monthList"></div></div>
+</section>
 <section class="panel" id="settings">
 <div class="card"><h2>하루 공부 목표</h2><label for="goalInput">목표 시간 (분)</label><input type="number" id="goalInput" min="1" step="10" placeholder="300"><button class="primary" id="saveGoal">목표 저장하기</button><div class="muted" id="goalMessage" aria-live="polite"></div></div>
-<div class="card"><h2>데이터 안내</h2><p class="muted">기록은 현재 사용 중인 브라우저에 저장돼. 다른 기기와 자동으로 동기화되지는 않으니 브라우저 데이터를 삭제하기 전에 백업해 줘.</p><button class="secondary" id="exportData">기록 백업 파일 내보내기</button></div>
+<div class="card"><h2>데이터 안내</h2><p class="muted">기록은 현재 사용 중인 브라우저에 저장돼. 다른 기기와 자동으로 동기화되지는 않으니 브라우저 데이터를 삭제하기 전에 백업해 줘.</p><div class="muted" id="storageInfo" style="margin-bottom:10px"></div><button class="secondary" id="exportData">기록 백업 파일 내보내기</button> <button class="secondary" id="importBtn">백업 파일 불러오기</button><input type="file" id="importFile" accept="application/json,.json" hidden><div class="muted" id="importMessage" aria-live="polite" style="margin-top:8px"></div></div>
 </section>
 <footer>작은 기록이 모여 나만의 학습 방향이 돼.</footer>
 </main>
 <script>
 const KEY='studyCompassV2';
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-let state={goal:300,records:[],directions:{},reviews:{},activeTimer:null,pendingSession:null,gradeProfiles:{},exams:[],mistakes:[]};
+let state={firstUse:null,goal:300,records:[],directions:{},reviews:{},activeTimer:null,pendingSession:null,gradeProfiles:{},exams:[],mistakes:[]};
 try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old)state={...state,...old,gradeProfiles:old.gradeProfiles||{},exams:old.exams||[],mistakes:old.mistakes||[]}}catch(e){}
 const $=id=>document.getElementById(id);
-const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('브라우저 저장 공간에 문제가 있어 기록을 저장하지 못했어. 설정에서 백업 파일을 내보내 줘.')}};
 const mins=n=>`${Math.floor(n/60)}시간 ${n%60}분`.replace(/^0시간 /,'');
+(function(){const ds=state.records.map(r=>r.date).sort();const first=ds[0];if(!state.firstUse||(first&&first<state.firstUse))state.firstUse=first||state.firstUse||today();try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}})();
 function recordsOn(date){return state.records.filter(r=>r.date===date)}
 function totalOn(date){return recordsOn(date).reduce((s,r)=>s+r.minutes,0)}
 function subjectsOn(date){const m={};recordsOn(date).forEach(r=>m[r.subject]=(m[r.subject]||0)+r.minutes);return m}
-function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview();if(name==='grades')renderGrades();if(name==='mistakes')renderMistakes();if(name==='weekly')renderWeekly()}
+function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));if(name==='analysis')renderAnalysis();if(name==='review')loadReview();if(name==='grades')renderGrades();if(name==='mistakes')renderMistakes();if(name==='weekly')renderWeekly();if(name==='archive')renderArchive()}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.goto)));
 function renderHome(){const d=today(),t=totalOn(d),pct=Math.min(100,Math.round(t/state.goal*100));$('todayTotal').textContent=mins(t);$('goalText').textContent=mins(state.goal);$('goalBar').style.width=pct+'%';$('goalProgress').textContent=`목표의 ${pct}% 달성`;
@@ -165,7 +180,37 @@ $('mistakeList').innerHTML=arr.length?[...arr].sort((a,b)=>b.date.localeCompare(
 $('mistakes').addEventListener('click',e=>{if(e.target.dataset.delMistake){state.mistakes=state.mistakes.filter(x=>String(x.id)!==e.target.dataset.delMistake);save();renderMistakes()}});
 function renderWeekly(){const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;days.push({date:key,label:['일','월','화','수','목','금','토'][d.getDay()],minutes:totalOn(key)})}const sum=days.reduce((n,x)=>n+x.minutes,0),max=Math.max(1,...days.map(x=>x.minutes));$('weekTotal').textContent=mins(sum);$('weekAverage').textContent=mins(Math.round(sum/7));$('weekChart').innerHTML=days.map(x=>`<div class="chartrow"><span>${x.label}요일</span><div class="charttrack"><span style="width:${x.minutes/max*100}%"></span></div><b>${mins(x.minutes)}</b></div>`).join('');const subs={};days.forEach(x=>recordsOn(x.date).forEach(r=>subs[r.subject]=(subs[r.subject]||0)+r.minutes));$('weekSubjects').innerHTML=Object.keys(subs).length?Object.entries(subs).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="subjectline"><span>${esc(s)}</span><b>${mins(n)}</b></div><div class="bar"><span style="width:${n/Math.max(1,sum)*100}%"></span></div>`).join(''):'최근 7일간 공부 기록이 없어.';const best=[...days].sort((a,b)=>b.minutes-a.minutes)[0];$('weekInsight').innerHTML=sum?`최근 7일 동안 총 <b>${mins(sum)}</b> 공부했어. 하루 평균은 <b>${mins(Math.round(sum/7))}</b>이고, 가장 많이 공부한 날은 <b>${best.date} (${mins(best.minutes)})</b>이야.`:'공부 기록을 입력하면 주간 요약을 확인할 수 있어.'}
 
-function renderAll(){renderHome();renderRecords();renderAnalysis();renderWeekly()}
+// 기록 보관함: 누적 · 일별 · 월별 · 달력 · 연속 공부일
+const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const dayNum=k=>{const [y,m,d]=k.split('-').map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
+let calView=(()=>{const n=new Date();return{y:n.getFullYear(),m:n.getMonth()}})(),selDate=today();
+function dailyMap(){const m={};state.records.forEach(r=>m[r.date]=(m[r.date]||0)+r.minutes);return m}
+function calcStreaks(map){const days=Object.keys(map).filter(k=>map[k]>0).sort();let longest=0,run=0,prev=null;days.forEach(k=>{const n=dayNum(k);run=prev!==null&&n-prev===1?run+1:1;prev=n;if(run>longest)longest=run});const set=new Set(days.map(dayNum));let cur=0,n=dayNum(today());const aliveToday=set.has(n);if(!aliveToday)n--;while(set.has(n)){cur++;n--}return{cur,longest,aliveToday}}
+function lvl(min){const g=state.goal||300;return min<=0?0:min<g*.34?1:min<g*.67?2:min<g?3:4}
+function elapsedDays(y,m){const now=new Date(),dim=new Date(y,m+1,0).getDate(),cy=now.getFullYear(),cm=now.getMonth();if(y===cy&&m===cm)return now.getDate();return (y<cy||(y===cy&&m<cm))?dim:0}
+function monthStats(map,y,m){const pre=`${y}-${pad(m+1)}-`,keys=Object.keys(map).filter(k=>k.startsWith(pre)&&map[k]>0),total=keys.reduce((n,k)=>n+map[k],0),el=elapsedDays(y,m);let best=null;keys.forEach(k=>{if(!best||map[k]>map[best])best=k});return{total,days:keys.length,avg:el?Math.round(total/el):0,el,best}}
+function renderArchive(){const map=dailyMap(),all=Object.values(map).reduce((n,x)=>n+x,0),studied=Object.values(map).filter(x=>x>0).length;
+const start=state.firstUse||today(),since=Math.max(1,dayNum(today())-dayNum(start)+1);
+$('archiveSince').textContent=`${start} 첫 기록부터 오늘까지 ${since}일째`;$('allTotal').textContent=mins(all);$('allDays').textContent=studied+'일';$('allAvg').textContent=mins(studied?Math.round(all/studied):0);
+const st=calcStreaks(map);$('streakCur').textContent=st.cur+'일';$('streakMax').textContent=st.longest+'일';$('streakHint').textContent=st.cur===0?'오늘 공부하면 새로운 연속 기록이 시작돼.':st.aliveToday?'오늘도 공부 완료! 연속 기록이 이어지고 있어.':'오늘 공부하면 연속 기록이 '+(st.cur+1)+'일로 이어져.';
+const {y,m}=calView,first=new Date(y,m,1),dim=new Date(y,m+1,0).getDate();$('calTitle').textContent=`${y}년 ${m+1}월`;
+let h=['일','월','화','수','목','금','토'].map(x=>`<div class="dow">${x}</div>`).join('');for(let i=0;i<first.getDay();i++)h+='<div class="day blank"></div>';
+for(let d=1;d<=dim;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`,v=map[k]||0;h+=`<button class="day l${lvl(v)}${k===today()?' today':''}${k===selDate?' sel':''}" data-day="${k}" aria-label="${k} ${mins(v)}">${d}</button>`}$('calGrid').innerHTML=h;
+const recs=recordsOn(selDate),subs=subjectsOn(selDate),dt=totalOn(selDate);$('dayTitle').textContent=`일별 기록 · ${selDate}`;
+$('archiveDay').innerHTML=recs.length?`<div class="stat"><span class="muted">이 날 총 공부 시간</span><strong>${mins(dt)}</strong></div>`+Object.entries(subs).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="subjectline"><span>${esc(s)}</span><b>${mins(n)}</b></div><div class="bar"><span style="width:${n/Math.max(dt,1)*100}%"></span></div>`).join('')+'<div style="margin-top:10px">'+recs.map(r=>`<div class="item"><div class="grow"><b>${esc(r.subject)} · ${mins(r.minutes)}</b><small>${esc(r.note||'학습 내용 메모 없음')}</small></div></div>`).join('')+'</div>':'<div class="empty">이 날은 공부 기록이 없어. 달력에서 다른 날짜를 눌러 봐.</div>';
+const ms=monthStats(map,y,m);$('monthTitle').textContent=`월별 기록 · ${y}년 ${m+1}월`;$('monTotal').textContent=mins(ms.total);$('monAvg').textContent=mins(ms.avg);
+$('monExtra').textContent=ms.total?`공부한 날 ${ms.days}일 · 최고 기록 ${ms.best.slice(5)} (${mins(map[ms.best])}) · 일평균은 ${ms.el}일 기준`:'이 달의 공부 기록이 없어.';
+const msub={},pre=`${y}-${pad(m+1)}-`;state.records.filter(r=>r.date.startsWith(pre)).forEach(r=>msub[r.subject]=(msub[r.subject]||0)+r.minutes);
+$('monSubjects').innerHTML=Object.entries(msub).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="subjectline"><span>${esc(s)}</span><b>${mins(n)}</b></div><div class="bar"><span style="width:${n/Math.max(ms.total,1)*100}%"></span></div>`).join('');
+const months=[...new Set(Object.keys(map).map(k=>k.slice(0,7)))].sort().reverse();
+$('monthList').innerHTML=months.length?months.map(k=>{const [yy,mm]=k.split('-').map(Number),s=monthStats(map,yy,mm-1);return `<button class="monrow" data-month="${k}"><b>${yy}년 ${mm}월 · ${mins(s.total)}</b><small>일평균 ${mins(s.avg)} · 공부한 날 ${s.days}일</small></button>`}).join(''):'<div class="empty">아직 보관된 기록이 없어.</div>'}
+$('archive').addEventListener('click',e=>{const t=e.target.closest('[data-cal-nav],[data-day],[data-month]');if(!t)return;if(t.dataset.calNav){const d=new Date(calView.y,calView.m+Number(t.dataset.calNav),1);calView={y:d.getFullYear(),m:d.getMonth()}}else if(t.dataset.day){selDate=t.dataset.day}else if(t.dataset.month){const [yy,mm]=t.dataset.month.split('-').map(Number);calView={y:yy,m:mm-1};window.scrollTo({top:0,behavior:'smooth'})}renderArchive()});
+// 백업 불러오기(병합) · 저장소 영구 보존 요청
+$('importBtn').onclick=()=>$('importFile').click();
+$('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||!Array.isArray(d.records))throw 0;const merge=(a,b)=>{const ids=new Set(a.map(x=>String(x.id)));return a.concat((b||[]).filter(x=>!ids.has(String(x.id))))};const before=state.records.length;state.records=merge(state.records,d.records);state.exams=merge(state.exams,d.exams);state.mistakes=merge(state.mistakes,d.mistakes);state.reviews={...(d.reviews||{}),...state.reviews};state.directions={...(d.directions||{}),...state.directions};state.gradeProfiles={...(d.gradeProfiles||{}),...state.gradeProfiles};if(d.firstUse&&(!state.firstUse||d.firstUse<state.firstUse))state.firstUse=d.firstUse;save();renderAll();renderGrades();renderMistakes();$('importMessage').textContent=`불러오기 완료! 공부 기록 ${state.records.length-before}건을 추가했어.`}catch(err){$('importMessage').textContent='올바른 백업 파일이 아니야.'}$('importFile').value=''};rd.readAsText(f)};
+if(navigator.storage&&navigator.storage.persist){navigator.storage.persist().then(ok=>{$('storageInfo').textContent=ok?'✔ 브라우저가 이 앱의 기록을 자동으로 지우지 않도록 보호 중이야.':'기록은 이 브라우저에 저장돼. 정기적으로 백업 파일을 내보내 두면 안전해.'}).catch(()=>{})}else $('storageInfo').textContent='기록은 이 브라우저에 저장돼. 정기적으로 백업 파일을 내보내 두면 안전해.';
+
+function renderAll(){renderHome();renderRecords();renderAnalysis();renderWeekly();renderArchive()}
 $('todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 renderAll();
 renderTimer();renderGrades();renderMistakes();
