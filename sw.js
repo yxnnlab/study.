@@ -1,5 +1,5 @@
 // Study Compass v6 — 네트워크 우선(항상 최신 파일), 오프라인일 때만 캐시 사용
-const CACHE="study-compass-v6-2";
+const CACHE="study-compass-v6-3";
 const FILES=["./","./index.html","./manifest.webmanifest","./sync-config.js","./icons/icon-192.png","./icons/icon-512.png","./icons/apple-touch-icon.png"];
 self.addEventListener("install",e=>e.waitUntil(
   caches.open(CACHE).then(c=>Promise.all(FILES.map(f=>fetch(new Request(f,{cache:"reload"})).then(r=>r.ok?c.put(f,r):null).catch(()=>null)))).then(()=>self.skipWaiting())
